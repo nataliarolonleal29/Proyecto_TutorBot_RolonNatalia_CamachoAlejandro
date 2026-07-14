@@ -1,0 +1,1031 @@
+{
+  "name": "Backup_Funcional_WF2_Motor_Asignacion",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1846450151,
+          "mode": "list",
+          "cachedResultName": "Disponibilidad",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1846450151"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1808,
+        -240
+      ],
+      "id": "81bbe22d-24b1-4a1a-8da2-bfd3728fa117",
+      "name": "Disponibilidad",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6c2f1c5c-3970-41a7-ad81-9bc529c10f43",
+              "name": "id_estudiante",
+              "value": "E001",
+              "type": "string"
+            },
+            {
+              "id": "484da84e-7293-4ae9-bd82-687697840c7d",
+              "name": "hora_preferida",
+              "value": "08:00",
+              "type": "string"
+            },
+            {
+              "id": "26a5b12b-b5b9-4ab3-903a-75b21e7d5cf2",
+              "name": "mensaje",
+              "value": "2",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2784,
+        -224
+      ],
+      "id": "13eea30e-b949-4ca4-bd04-8b9c02bcef7a",
+      "name": "Solicitud"
+    },
+    {
+      "parameters": {
+        "jsCode": "const diasSemana = {\n  \"Domingo\": 0, \"Lunes\": 1, \"Martes\": 2,\n  \"Miércoles\": 3, \"Miercoles\": 3,\n  \"Jueves\": 4, \"Viernes\": 5,\n  \"Sábado\": 6, \"Sabado\": 6\n};\n\nfunction proximaFecha(diaSemanaTexto) {\n  const hoy = new Date();\n  const diaObjetivo = diasSemana[diaSemanaTexto];\n  if (diaObjetivo === undefined) return null;\n  const diaActual = hoy.getDay();\n  let diff = diaObjetivo - diaActual;\n  if (diff < 0) diff += 7;\n  const resultado = new Date(hoy);\n  resultado.setDate(hoy.getDate() + diff);\n  const yyyy = resultado.getFullYear();\n  const mm = String(resultado.getMonth() + 1).padStart(2, '0');\n  const dd = String(resultado.getDate()).padStart(2, '0');\n  return `${yyyy}-${mm}-${dd}`;\n}\n\nconst opciones = [];\nconst vistos = new Set();\n\nfor (const item of items) {\n\n  const tutor = item.json;\n\n  const claveUnica = `${tutor.id_tutor}-${tutor.dia_semana}-${tutor.hora_inicio}`;\n\n  if (vistos.has(claveUnica)) {\n    continue;\n  }\n\n  vistos.add(claveUnica);\n\n  opciones.push({\n    opcion: opciones.length + 1,\n    id_tutor: tutor.id_tutor,\n    nombre_tutor: tutor.nombre,\n    fecha: proximaFecha(tutor.dia_semana),\n    dia_semana: tutor.dia_semana,\n    hora_inicio: tutor.hora_inicio,\n    hora_fin: tutor.hora_fin,\n    estado: tutor.estado\n  });\n}\n\nreturn opciones.slice(0,3).map(opcion => ({\n  json: opcion\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1392,
+        -240
+      ],
+      "id": "beaf160e-4354-4b64-90e2-e2edf057af22",
+      "name": "Motor Inteligente"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 659472881,
+          "mode": "list",
+          "cachedResultName": "Tutores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=659472881"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2288,
+        -240
+      ],
+      "id": "54730045-6ec2-4da1-be53-188876f5f41a",
+      "name": "Tutores",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "from": "+14155238886",
+        "to": "={{ $json.telefono || '+573016218473' }}",
+        "toWhatsapp": true,
+        "message": "={{ $json.mensaje }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        -352
+      ],
+      "id": "73712fa1-f61e-4df5-9d8d-7fbd9f642a41",
+      "name": "Enviar mensaje WhatsApp",
+      "credentials": {
+        "twilioApi": {
+          "id": "y77sTKUGd8m3qMAU",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const opciones = items.map(item => item.json);\n\nconst materia = $('Procesar mensaje usuario')\n.first()\n.json\n.materia_seleccionada;\n\nconst telefono = $('Procesar mensaje usuario')\n.first()\n.json\n.telefono;\n\nlet mensaje = \"👋 Hola.\\n\\n\";\nmensaje += `📚 Materia seleccionada: ${materia}\\n\\n`;\nmensaje += \"Encontré estas opciones disponibles para tu asesoría:\\n\\n\";\n\nfor (const opcion of opciones) {\n\n  mensaje += `👨‍🏫 ${opcion.opcion}. ${opcion.nombre_tutor}\\n`;\n  mensaje += `📅 ${opcion.fecha}\\n`;\n  mensaje += `⏰ ${opcion.hora_inicio} - ${opcion.hora_fin}\\n\\n`;\n\n}\n\nmensaje += \"✍️ Responde con el número de la opción que prefieras.\";\n\nreturn [\n{\n  json:{\n    mensaje,\n    telefono\n  }\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -992,
+        -352
+      ],
+      "id": "76db005b-62e0-46d0-811e-3e2a197cd2fe",
+      "name": "Generar mensaje"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "tutorbot",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -3536,
+        -128
+      ],
+      "id": "8db5d203-0b6d-461d-810c-2475ce78b231",
+      "name": "Webhook",
+      "webhookId": "d1a9a914-9dee-47bc-a6f7-e74890f5dad8"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -3328,
+        -128
+      ],
+      "id": "eea03fc6-dc37-444f-a2ed-d571501c1574",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const mensaje = ($json.mensaje || \"\").toLowerCase().trim();\n\nlet respuesta = \"\";\nlet materiaSeleccionada = null;\n\n\nif (mensaje === \"hola\" || mensaje === \"inicio\") {\n\n  respuesta =\n`👋 Bienvenido a TutorBot 🤖\n\nSelecciona la materia para tu asesoría:\n\n1️⃣ JavaScript\n2️⃣ Python\n3️⃣ Java\n4️⃣ Bases de Datos\n5️⃣ HTML y CSS`;\n\n} \n\nelse if (mensaje === \"1\") {\n\n  materiaSeleccionada = \"JavaScript\";\n\n  respuesta = \n`Perfecto 👍\n\nSeleccionaste:\n💻 JavaScript\n\nBuscando tutores disponibles...`;\n\n}\n\nelse if (mensaje === \"2\") {\n\n  materiaSeleccionada = \"Python\";\n\n  respuesta = \n`Perfecto 👍\n\nSeleccionaste:\n🐍 Python\n\nBuscando tutores disponibles...`;\n\n}\n\nelse if (mensaje === \"3\") {\n\n  materiaSeleccionada = \"Java\";\n\n  respuesta = \n`Perfecto 👍\n\nSeleccionaste:\n☕ Java\n\nBuscando tutores disponibles...`;\n\n}\n\nelse if (mensaje === \"4\") {\n\n  materiaSeleccionada = \"Bases de Datos\";\n\n  respuesta =\n`Perfecto 👍\n\nSeleccionaste:\n🗄️ Bases de Datos\n\nBuscando tutores disponibles...`;\n\n}\n\nelse if (mensaje === \"5\") {\n\n  materiaSeleccionada = \"HTML y CSS\";\n\n  respuesta =\n`Perfecto 👍\n\nSeleccionaste:\n🌐 HTML y CSS\n\nBuscando tutores disponibles...`;\n\n}\n\nelse {\n\n  respuesta =\n`No entendí tu respuesta 😅\n\nPor favor escribe:\nHola\npara ver el menú de materias.`;\n\n}\n\n\nreturn [\n{\njson:{\nmensaje_usuario: mensaje,\nmateria_seleccionada: materiaSeleccionada,\nrespuesta,\ntelefono: $json.telefono || null\n}\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2528,
+        -240
+      ],
+      "id": "f476b8b2-f20e-44cb-9554-226031740cad",
+      "name": "Procesar mensaje usuario"
+    },
+    {
+      "parameters": {
+        "jsCode": "const materia = $('Procesar mensaje usuario')\n.first()\n.json\n.materia_seleccionada;\n\n\nconst tutoresFiltrados = items.filter(item => {\n\n  return (\n    item.json.estado_tutor === \"Activo\" &&\n    item.json.especialidad_materias === materia\n  );\n\n});\n\n\nreturn tutoresFiltrados;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2032,
+        -240
+      ],
+      "id": "3940c2c5-0533-4431-8dfc-88bd34fc142d",
+      "name": "Filtrar tutores por materia"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tutores = $('Filtrar tutores por materia').all();\n\nconst idsTutores = new Set(\n  tutores.map(item => item.json.id_tutor)\n);\n\nreturn items.filter(item =>\n  idsTutores.has(item.json.id_tutor)\n);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1600,
+        -240
+      ],
+      "id": "cafb90b7-3868-43e3-8a2a-11808a4c6854",
+      "name": "Filtrar disponibilidad"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1863538079,
+          "mode": "list",
+          "cachedResultName": "ReservasPendientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1863538079"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_chat": "={{ $json.id_chat }}",
+            "opcion": "={{ $json.opcion }}",
+            "id_tutor": "={{ $json.id_tutor }}",
+            "nombre_tutor": "={{ $json.nombre_tutor }}",
+            "materia": "={{ $json.materia }}",
+            "fecha": "={{ $json.fecha }}",
+            "hora_inicio": "={{ $json.hora_inicio }}",
+            "hora_fin": "={{ $json.hora_fin }}",
+            "estado": "={{ $json.estado }}",
+            "fecha_creacion": "={{ $json.fecha_creacion }}",
+            "dia_semana": "={{ $json.dia_semana }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "id_chat",
+              "displayName": "id_chat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "opcion",
+              "displayName": "opcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre_tutor",
+              "displayName": "nombre_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "materia",
+              "displayName": "materia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "dia_semana",
+              "displayName": "dia_semana",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora_inicio",
+              "displayName": "hora_inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora_fin",
+              "displayName": "hora_fin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha_creacion",
+              "displayName": "fecha_creacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -992,
+        -128
+      ],
+      "id": "d8ead386-f472-4c60-8e35-7bcd14a6bf54",
+      "name": "Guardar reservas pendientes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const materia = $('Procesar mensaje usuario')\n.first()\n.json\n.materia_seleccionada;\n\nconst telefono = $('Procesar mensaje usuario')\n.first()\n.json\n.telefono || 'PRUEBA001';\n\nconst ahora = new Date().toISOString();\n\nreturn items.map(item => {\n\n  return {\n\n    json: {\n\n      id_chat: telefono,\n\n      telefono,\n\n      opcion: item.json.opcion,\n\n      id_tutor: item.json.id_tutor,\n\n      nombre_tutor: item.json.nombre_tutor,\n\n      materia: materia,\n\n      fecha: item.json.fecha,\n\n      dia_semana: item.json.dia_semana,\n\n      hora_inicio: item.json.hora_inicio,\n\n      hora_fin: item.json.hora_fin,\n\n      estado: \"Pendiente\",\n\n      fecha_creacion: ahora\n\n    }\n\n  };\n\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1184,
+        -240
+      ],
+      "id": "1219f136-15be-4628-82b7-2b992cad8105",
+      "name": "Preparar Reserva"
+    },
+    {
+      "parameters": {
+        "jsCode": "const opcion = parseInt(($json.mensaje || \"\").trim(), 10);\n\nif (![1, 2, 3].includes(opcion)) {\n  throw new Error(\"La opción debe ser 1, 2 o 3.\");\n}\n\nreturn [\n  {\n    json: {\n      id_chat: ($json.telefono || \"PRUEBA001\"),\n      opcion\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2560,
+        0
+      ],
+      "id": "19104543-22eb-4e16-a7b8-239074f9dad3",
+      "name": "Procesar selección"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1863538079,
+          "mode": "list",
+          "cachedResultName": "ReservasPendientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1863538079"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2368,
+        32
+      ],
+      "id": "38ef8ca1-8168-461f-b364-6ac9818d9ae1",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const seleccion = $('Procesar selección').first().json;\n\nconst reserva = items.find(item =>\n  item.json.id_chat === seleccion.id_chat &&\n  Number(item.json.opcion) === seleccion.opcion &&\n  item.json.estado === \"Pendiente\"\n);\n\nif (!reserva) {\n  throw new Error(\"No se encontró una reserva pendiente para esa opción.\");\n}\n\nreturn [reserva];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2112,
+        112
+      ],
+      "id": "1d8476b2-515c-454c-822e-3849aeb1fc4f",
+      "name": "Buscar opción elegida"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1863538079,
+          "mode": "list",
+          "cachedResultName": "ReservasPendientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1863538079"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "estado": "=Confirmada",
+            "id_chat": "={{ $json.id_chat }}"
+          },
+          "matchingColumns": [
+            "id_chat"
+          ],
+          "schema": [
+            {
+              "id": "id_chat",
+              "displayName": "id_chat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "opcion",
+              "displayName": "opcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "nombre_tutor",
+              "displayName": "nombre_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "materia",
+              "displayName": "materia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "hora_inicio",
+              "displayName": "hora_inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "hora_fin",
+              "displayName": "hora_fin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha_creacion",
+              "displayName": "fecha_creacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1472,
+        48
+      ],
+      "id": "36277477-d60d-46ef-b3b1-d505667747ac",
+      "name": "Actualizar reserva",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "alexc6997@gmail.com",
+          "mode": "list"
+        },
+        "start": "={{ $json.fecha + 'T' + $json.hora_inicio + ':00-05:00' }}",
+        "end": "={{ $json.fecha + 'T' + $json.hora_fin + ':00-05:00' }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -1888,
+        -32
+      ],
+      "id": "18bd01e4-2557-4f92-8b6b-a595da0cd69f",
+      "name": "Create an event",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Z9JehC3ptmYOv32N",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1696,
+        144
+      ],
+      "id": "82ca68ff-886b-48a0-8cf1-d9635ae4a6f2",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1846450151,
+          "mode": "list",
+          "cachedResultName": "Disponibilidad",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1846450151"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_tutor": "={{ $json.id_tutor }}",
+            "dia_semana": "={{ $json.dia_semana }}",
+            "hora_inicio": "={{ $json.hora_inicio }}",
+            "estado": "=ocupado"
+          },
+          "matchingColumns": [
+            "id_tutor",
+            "dia_semana",
+            "hora_inicio"
+          ],
+          "schema": [
+            {
+              "id": "id_dispo",
+              "displayName": "id_dispo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "dia_semana",
+              "displayName": "dia_semana",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora_inicio",
+              "displayName": "hora_inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora_fin",
+              "displayName": "hora_fin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1472,
+        -128
+      ],
+      "id": "6ce15a36-b50f-4321-b603-2c9e4bf06535",
+      "name": "Actualizar Disponibilidad",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const datos = $json;\n\nlet mensaje = \"✅ Tu asesoría ha sido confirmada.\\n\\n\";\nmensaje += `👩‍🏫 Tutor: ${datos.nombre_tutor}\\n`;\nmensaje += `📚 Materia: ${datos.materia}\\n`;\nmensaje += `📅 Fecha: ${datos.fecha}\\n`;\nmensaje += `🕗 Hora: ${datos.hora_inicio} - ${datos.hora_fin}`;\n\nreturn [\n  {\n    json: {\n      mensaje,\n      telefono: datos.id_chat\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1472,
+        208
+      ],
+      "id": "5f0ebf36-e76c-459c-929e-e80b57f64909",
+      "name": "Generar Mensaje Confirmacion"
+    },
+    {
+      "parameters": {
+        "from": "+14155238886",
+        "to": "={{ $json.telefono || '+573016218473' }}",
+        "toWhatsapp": true,
+        "message": "={{ $json.mensaje }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        -1248,
+        208
+      ],
+      "id": "5512ada9-7a55-42b7-9cab-314e1757edec",
+      "name": "Enviar Confirmación WhatsApp",
+      "credentials": {
+        "twilioApi": {
+          "id": "y77sTKUGd8m3qMAU",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body || $json;\nconst mensaje = (body.Body || body.mensaje || '').toString();\nconst telefono = (body.From || body.from || '').toString().replace('whatsapp:', '');\n\nreturn [\n  {\n    json: {\n      mensaje,\n      telefono\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3376,
+        0
+      ],
+      "id": "9170c4cd-cf3e-4fc7-a55f-ea31f46a3e60",
+      "name": "Extraer Datos WhatsApp"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Filtrar disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solicitud": {
+      "main": [
+        [
+          {
+            "node": "Procesar mensaje usuario",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Procesar selección",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motor Inteligente": {
+      "main": [
+        [
+          {
+            "node": "Preparar Reserva",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tutores": {
+      "main": [
+        [
+          {
+            "node": "Filtrar tutores por materia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar mensaje": {
+      "main": [
+        [
+          {
+            "node": "Enviar mensaje WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extraer Datos WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar mensaje usuario": {
+      "main": [
+        [
+          {
+            "node": "Tutores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar tutores por materia": {
+      "main": [
+        [
+          {
+            "node": "Disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Motor Inteligente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Reserva": {
+      "main": [
+        [
+          {
+            "node": "Generar mensaje",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Guardar reservas pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar selección": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Buscar opción elegida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar opción elegida": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Actualizar reserva",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Actualizar Disponibilidad",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generar Mensaje Confirmacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Mensaje Confirmacion": {
+      "main": [
+        [
+          {
+            "node": "Enviar Confirmación WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Datos WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Procesar mensaje usuario",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Procesar selección",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "570ee983-7420-4bef-baf0-3c6e39e0fe01",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
+  },
+  "id": "aafcM7Lba2soYTGP",
+  "tags": []
+}
