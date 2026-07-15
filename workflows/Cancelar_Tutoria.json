@@ -6,10 +6,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        0,
-        0
+        -224,
+        96
       ],
-      "id": "ad0e8b77-4277-4f93-b035-762f7795433a",
+      "id": "43872937-2b65-4003-9d15-40fa8350beeb",
       "name": "When clicking ‘Execute workflow’"
     },
     {
@@ -39,10 +39,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        192,
-        0
+        -32,
+        96
       ],
-      "id": "8460dec3-1404-41dd-9c5d-40f48209dedc",
+      "id": "508d7268-88ee-4354-90fd-b1bd6fa0fffd",
       "name": "Get row(s) in sheet",
       "alwaysOutputData": true,
       "credentials": {
@@ -80,10 +80,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        400,
-        0
+        176,
+        96
       ],
-      "id": "044f3b14-152a-4d85-8cb0-418a70644d9c",
+      "id": "c88e1d3a-666b-4ea3-8f45-8bac42aaef80",
       "name": "If"
     },
     {
@@ -103,10 +103,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1024,
-        -96
+        800,
+        -16
       ],
-      "id": "50d1ad01-703a-433b-bb3f-52eca7332ef9",
+      "id": "75d9af11-3292-4261-86a1-9c71bea1f06e",
       "name": "Respuesta OK"
     },
     {
@@ -126,10 +126,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        608,
-        96
+        384,
+        192
       ],
-      "id": "7fd3b91b-0719-486d-8cf7-5d7795479025",
+      "id": "8ec7760b-ba2d-4638-8455-a98ed9e21776",
       "name": "Respuesta Error"
     },
     {
@@ -152,7 +152,8 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id_tutoria": "={{ $json.id_tutoria }}"
+            "id_tutoria": "={{ $json.id_tutoria }}",
+            "estado": "Cancelada"
           },
           "matchingColumns": [
             "id_tutoria"
@@ -242,10 +243,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        608,
-        -96
+        384,
+        -16
       ],
-      "id": "e70c6024-e356-4e7e-a429-ed8109ea4036",
+      "id": "437323dc-83ce-482a-a1c6-3b4b58e740e9",
       "name": "Actualizar Estado Tutoría",
       "alwaysOutputData": true,
       "credentials": {
@@ -275,7 +276,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "estado": "libre",
+            "estado": "Libre",
             "id_tutor": "={{ $json.id_tutor }}"
           },
           "matchingColumns": [
@@ -381,10 +382,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        816,
-        -96
+        592,
+        -16
       ],
-      "id": "83a2da1f-733c-4df2-a3a9-a07f7d559967",
+      "id": "2f11dc51-62e7-49de-9048-a0cd092d0c28",
       "name": "Liberar Horario Tutor",
       "alwaysOutputData": true,
       "credentials": {
@@ -464,7 +465,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "95779f10-82c8-4ce2-8650-8438b04ec4a7",
+  "versionId": "0924cfda-201c-4ad4-8724-199472935638",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
