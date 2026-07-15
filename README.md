@@ -156,21 +156,13 @@ resultado](./evidencias/cancelar_id_inexistente_exitoso.png)
 
 ![Consultar Tutoría](./evidencias/consultar_tutoria_filtro.png)
 
-## 🚀 Mejoras futuras
-
--   Integración con Google Calendar.
--   Reportes automáticos.
--   Dashboard administrativo.
--   Recordatorios automáticos.
--   Estadísticas por materia.
-
 ## ✅ Resultado esperado
 
 -   Reducción del tiempo de asignación.
 -   Eliminación de cruces de horario.
 -   Mayor trazabilidad.
 -   Automatización del proceso.
-
+-   
 ## 📌 Conclusiones
 
 TutorBot demuestra cómo **n8n**, **Discord** y **Google Sheets** pueden
