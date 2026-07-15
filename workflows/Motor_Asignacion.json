@@ -5,15 +5,16 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "whatsapp-tutorbot",
+        "responseMode": "responseNode",
         "options": {}
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1.1,
       "position": [
-        -928,
-        208
+        -5104,
+        -128
       ],
-      "id": "150a94f4-8e51-4162-9a20-9812dc4773ad",
+      "id": "522aace1-4483-4dc4-b8f3-49cae5c10684",
       "name": "Twilio Webhook",
       "webhookId": "405665d9-386f-4d2f-955b-9d71d4455dfa"
     },
@@ -24,10 +25,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -496,
-        208
+        -4672,
+        -128
       ],
-      "id": "1d0ecdad-b0d2-44b4-a3bb-37510026b659",
+      "id": "c178d3f9-1c8c-4d0e-9dd3-0fcf0c20b734",
       "name": "Extraer Datos WhatsApp"
     },
     {
@@ -55,16 +56,16 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -272,
-        208
+        -4448,
+        -128
       ],
-      "id": "195ac3f8-0c24-4a7e-aff9-64b05c28681c",
+      "id": "b1658472-e3bb-44f2-a905-7e0b41e44507",
       "name": "Buscar Sesión Usuario",
       "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -75,8 +76,7 @@
         "rules": {
           "rules": [
             {
-              "value2": "MENU_PRINCIPAL",
-              "output": 0
+              "value2": "MENU_PRINCIPAL"
             },
             {
               "value2": "MENU_MATERIAS",
@@ -105,10 +105,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
       "position": [
-        -48,
-        208
+        -4224,
+        -128
       ],
-      "id": "ffe6e1ee-92f0-475f-8143-39e83abc25bb",
+      "id": "c973c0e4-de4e-4bc4-8385-0673565168e9",
       "name": "Enrutador de Estados"
     },
     {
@@ -118,10 +118,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        224,
-        -16
+        -3952,
+        -352
       ],
-      "id": "b9e0cee6-8992-48c0-a259-1bfb0d22374c",
+      "id": "b262098f-e959-4f3e-a45b-48514a592613",
       "name": "Menu Inicial"
     },
     {
@@ -131,10 +131,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        224,
-        208
+        -3952,
+        -128
       ],
-      "id": "6d7d8084-8b40-4018-9210-c8e97fdb6008",
+      "id": "5f72e1d1-6aa1-479c-ab54-e1f1c80aa7a4",
       "name": "Procesar Materia"
     },
     {
@@ -164,10 +164,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        432,
-        208
+        -3744,
+        -128
       ],
-      "id": "a4515a06-35fb-4716-88eb-63c25173fa73",
+      "id": "41d0fe3c-5609-43cf-aa1f-b25ebf7892c6",
       "name": "¿Materia Inválida?"
     },
     {
@@ -187,15 +187,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        656,
-        224
+        -3520,
+        -112
       ],
-      "id": "b1249470-538f-436e-a983-d0af0da48337",
+      "id": "7759929c-ef48-4830-8df1-52731957df86",
       "name": "Descargar Tutores",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -206,10 +206,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        848,
-        224
+        -3328,
+        -112
       ],
-      "id": "6c1b0bea-fce9-4887-9bf8-59bf8f2c83ca",
+      "id": "550687c2-762e-4153-ae3f-14cb6a2f9a51",
       "name": "Filtrar Tutores"
     },
     {
@@ -229,15 +229,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1056,
-        224
+        -3120,
+        -112
       ],
-      "id": "105f49d1-05fb-4bbe-92e1-dcb50fa09c07",
+      "id": "e22be6fc-51bc-45f7-a3b7-014b02908390",
       "name": "Descargar Disponibilidades",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -248,10 +248,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1248,
-        224
+        -2928,
+        -112
       ],
-      "id": "31c5032c-8f70-4cc9-bfb3-ddc2485af83e",
+      "id": "45d74eb0-fcf2-4e71-bcf3-bd12e0bc3656",
       "name": "Cruzar Disponibilidad"
     },
     {
@@ -261,10 +261,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1456,
-        224
+        -2720,
+        -112
       ],
-      "id": "dbec7e9b-7f10-4f61-8ba3-1f6127db3cbc",
+      "id": "075fbb5a-5809-44db-91d0-4d6990920e6a",
       "name": "Motor de Asignación"
     },
     {
@@ -292,10 +292,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1664,
-        128
+        -2512,
+        -208
       ],
-      "id": "2eb0fd24-b524-4d8a-99ef-cf3602f7beed",
+      "id": "5abbb600-24e3-4c0b-ae54-1e4ac63a62df",
       "name": "¿Hay Opciones?"
     },
     {
@@ -305,10 +305,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1872,
-        128
+        -2304,
+        -208
       ],
-      "id": "027bbb82-42e6-4c0e-87d5-2eb4393c5680",
+      "id": "0b6f2ae9-4e5e-4f36-9797-9a8d72e6b042",
       "name": "Handler Sin Tutores"
     },
     {
@@ -318,10 +318,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1856,
-        336
+        -2320,
+        16
       ],
-      "id": "7f43dcc0-4038-445a-8fe1-24e3bcfa4f0e",
+      "id": "41bf2b04-30f2-4c6f-b1b5-dba21d40734f",
       "name": "Construir Menú Opciones"
     },
     {
@@ -346,7 +346,6 @@
             "nombre_tutor": "={{ $json.nombre_tutor }}",
             "materia": "={{ $('Procesar Materia').first().json.materia_seleccionada }}",
             "fecha": "={{ $json.fecha }}",
-            "dia_semana": "={{ $json.dia_semana }}",
             "hora_inicio": "={{ $json.hora_inicio }}",
             "hora_fin": "={{ $json.hora_fin }}",
             "estado": "Pendiente",
@@ -360,15 +359,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1648,
-        400
+        -2528,
+        80
       ],
-      "id": "3b425a31-40f8-4bbc-986f-4a9fed939342",
+      "id": "1cd5ed4a-bb3a-4e24-b234-e2c6d64459a7",
       "name": "Almacenar Pre-Reservas",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -389,15 +388,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        208,
-        496
+        -3968,
+        176
       ],
-      "id": "a4ff91a2-193d-4d02-8a94-3cd7fa7a83a9",
+      "id": "50287bb8-97dd-4520-996e-c5cf3af5063d",
       "name": "Cargar Opciones Ofrecidas",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -408,10 +407,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        432,
-        496
+        -3744,
+        176
       ],
-      "id": "e04eb874-6ff5-457e-80b2-928088586984",
+      "id": "13cd9c26-8eba-4be7-8fc9-23910aac4a70",
       "name": "Validar Selección"
     },
     {
@@ -439,10 +438,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        656,
-        496
+        -3520,
+        176
       ],
-      "id": "282f130a-b003-4515-b90b-434492ab4b83",
+      "id": "3e615b9a-242f-4b71-ba99-6a14706967ba",
       "name": "¿Selección Inválida?"
     },
     {
@@ -459,15 +458,15 @@
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1.3,
       "position": [
-        880,
-        512
+        -3296,
+        192
       ],
-      "id": "22cc39a3-c6bc-4ff8-a01a-6d5d0fb94760",
+      "id": "38cf7489-8167-4cc7-8cdf-4b3bd41952a6",
       "name": "Agendar Google Calendar",
       "alwaysOutputData": true,
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "1jW9IIfIIfa7MKJR",
+          "id": "Z9JehC3ptmYOv32N",
           "name": "Google Calendar account"
         }
       }
@@ -491,29 +490,120 @@
             "id_tutor": "={{ $('Validar Selección').first().json.id_tutor }}",
             "dia_semana": "={{ $('Validar Selección').first().json.dia_semana }}",
             "hora_inicio": "={{ $('Validar Selección').first().json.hora_inicio }}",
-            "estado": "Ocupado"
+            "estado": "Ocupado",
+            "row_number": 0
           },
           "matchingColumns": [
             "id_tutor",
             "dia_semana",
             "hora_inicio"
           ],
-          "schema": []
+          "schema": [
+            {
+              "id": "id_dispo",
+              "displayName": "id_dispo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dia_semana",
+              "displayName": "dia_semana",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora_inicio",
+              "displayName": "hora_inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora_fin",
+              "displayName": "hora_fin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1088,
-        512
+        -3088,
+        192
       ],
-      "id": "0041f6ff-126f-447d-b392-bdbaea319a3d",
+      "id": "b672cad5-3a26-410d-beed-8ae1e80ae022",
       "name": "Cerrar Disponibilidad",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -548,15 +638,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1296,
-        512
+        -2880,
+        192
       ],
-      "id": "ead37283-f956-4bcf-90ab-45cd5d0a0975",
+      "id": "d8617e51-d267-4f9d-acd7-7ceace548570",
       "name": "Confirmar Asesoría",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -567,10 +657,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1488,
-        512
+        -2688,
+        192
       ],
-      "id": "83282608-4e30-41b5-816d-f0ede80851e5",
+      "id": "0aa4c79f-cf4c-48b2-bcea-8a0fccbdeef5",
       "name": "Mensaje de Éxito"
     },
     {
@@ -582,10 +672,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        2288,
-        272
+        -1888,
+        -64
       ],
-      "id": "13134d24-7611-412f-9d16-103cca95111d",
+      "id": "349b1063-d1af-4047-909d-1b92ea590b77",
       "name": "Merge Salidas"
     },
     {
@@ -600,15 +690,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        2480,
-        272
+        -1696,
+        -64
       ],
-      "id": "49cb8d57-1b4d-4d82-8813-810e8a616e0b",
+      "id": "d8809a65-fe31-429c-a05b-67ac2338d216",
       "name": "Guardar Estado DB",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -623,14 +713,14 @@
       "type": "n8n-nodes-base.twilio",
       "typeVersion": 1,
       "position": [
-        2672,
-        272
+        -1504,
+        -64
       ],
-      "id": "2f09c94b-8d15-4dbe-ae2b-fef315ca2cc0",
+      "id": "58f8da27-18d6-4e53-9b2e-6716a116c3fa",
       "name": "Twilio WhatsApp Unificado",
       "credentials": {
         "twilioApi": {
-          "id": "ggmacjeqcN2SCcg2",
+          "id": "y77sTKUGd8m3qMAU",
           "name": "Twilio account"
         }
       }
@@ -644,10 +734,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -720,
-        208
+        -4896,
+        -128
       ],
-      "id": "9cd2ce81-58ea-49e2-a60c-1d036a724c87",
+      "id": "5b8e7b25-acc4-462d-9295-09af0fbf0584",
       "name": "Edit Fields",
       "disabled": true
     },
@@ -658,10 +748,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -48,
-        -200
+        -4224,
+        -528
       ],
-      "id": "nuevo-menu-principal-0001",
+      "id": "1e729217-9344-42fb-a665-9d079d72439d",
       "name": "Menu Principal"
     },
     {
@@ -692,10 +782,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
       "position": [
-        224,
-        -200
+        -3952,
+        -528
       ],
-      "id": "nuevo-switch-menu-principal-0002",
+      "id": "6767960b-b988-4736-a7e1-eaef205bde04",
       "name": "Switch Menu Principal"
     },
     {
@@ -705,10 +795,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        656,
-        -400
+        -3520,
+        -736
       ],
-      "id": "nuevo-procesar-registro-0003",
+      "id": "8b6978d9-78ab-4651-98a6-a53c05f29252",
       "name": "Procesar Registro"
     },
     {
@@ -737,10 +827,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        880,
-        -400
+        -3296,
+        -736
       ],
-      "id": "nuevo-if-registro-completo-0004",
+      "id": "a3445f60-0458-4c8a-97a2-fae8085608e7",
       "name": "¿Registro Completo?"
     },
     {
@@ -774,17 +864,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1104,
-        -480
+        -3072,
+        -816
       ],
-      "id": "nuevo-guardar-estudiante-0005",
-      "name": "Guardar Estudiante",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
-        }
-      }
+      "id": "cdcdd4b3-3b2e-4b90-a02f-fe4e5d8d1c16",
+      "name": "Guardar Estudiante"
     },
     {
       "parameters": {
@@ -793,10 +877,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        -928,
-        40
+        -5104,
+        -288
       ],
-      "id": "nuevo-respond-webhook-0008",
+      "id": "69270f98-8313-4f69-9a24-f15ef1522b42",
       "name": "Respond to Webhook"
     },
     {
@@ -806,10 +890,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        224,
-        -560
+        -3952,
+        -896
       ],
-      "id": "consultar-pedir-id-0001",
+      "id": "3573a01a-69e8-4872-920b-db9d1aa1f102",
       "name": "Pedir ID Consulta"
     },
     {
@@ -837,16 +921,16 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        656,
-        -560
+        -3520,
+        -896
       ],
-      "id": "consultar-buscar-0002",
+      "id": "cc9d6acc-f87c-49c2-b3e7-b47d84745d64",
       "name": "Buscar Tutoria (Consultar)",
       "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -878,10 +962,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        880,
-        -560
+        -3296,
+        -896
       ],
-      "id": "consultar-if-0003",
+      "id": "c11dda43-a1c1-444f-9c9b-2fa7adac93f6",
       "name": "¿Tutoria Encontrada? (Consultar)"
     },
     {
@@ -891,10 +975,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1104,
-        -640
+        -3072,
+        -976
       ],
-      "id": "consultar-ok-0004",
+      "id": "891d1dba-3c2b-43a8-a167-755944b4e4c7",
       "name": "Respuesta Consulta OK"
     },
     {
@@ -904,10 +988,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1104,
-        -480
+        -3072,
+        -816
       ],
-      "id": "consultar-error-0005",
+      "id": "e17a52cc-87ec-4e7a-9aae-8be5b29c3f29",
       "name": "Respuesta Consulta Error"
     },
     {
@@ -917,10 +1001,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        224,
-        -720
+        -3952,
+        -1056
       ],
-      "id": "cancelar-pedir-id-0006",
+      "id": "0d0d9340-2a3e-4c16-98ed-b89f13727b89",
       "name": "Pedir ID Cancelar"
     },
     {
@@ -948,16 +1032,16 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        656,
-        -720
+        -3520,
+        -1056
       ],
-      "id": "cancelar-buscar-0007",
+      "id": "73d36042-2d20-4939-9505-21e776caf8f3",
       "name": "Buscar Tutoria (Cancelar)",
       "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -989,10 +1073,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        880,
-        -720
+        -3296,
+        -1056
       ],
-      "id": "cancelar-if-0008",
+      "id": "aea8a0e1-8862-4101-8b70-9471056361cb",
       "name": "¿Tutoria Encontrada? (Cancelar)"
     },
     {
@@ -1023,18 +1107,12 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1104,
-        -800
+        -3072,
+        -1136
       ],
-      "id": "cancelar-actualizar-0009",
+      "id": "ab7e4630-d2a8-4c08-be66-4a92092db455",
       "name": "Actualizar Estado Tutoria",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
-        }
-      }
+      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -1053,27 +1131,121 @@
           "mappingMode": "defineBelow",
           "value": {
             "id_tutor": "={{ $('Buscar Tutoria (Cancelar)').first().json.id_tutor }}",
-            "estado": "Libre"
+            "estado": "Libre",
+            "row_number": 0
           },
           "matchingColumns": [
             "id_tutor"
-          ]
+          ],
+          "schema": [
+            {
+              "id": "id_dispo",
+              "displayName": "id_dispo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dia_semana",
+              "displayName": "dia_semana",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hora_inicio",
+              "displayName": "hora_inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hora_fin",
+              "displayName": "hora_fin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1312,
-        -800
+        -2864,
+        -1136
       ],
-      "id": "cancelar-liberar-0010",
+      "id": "01bac7f5-0a25-4d11-831b-b987a5f07c20",
       "name": "Liberar Horario Tutor",
       "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -1084,10 +1256,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1520,
-        -800
+        -2656,
+        -1136
       ],
-      "id": "cancelar-ok-0011",
+      "id": "869afdfb-d5c0-41ee-a7f5-9a5f803110fe",
       "name": "Respuesta Cancelar OK"
     },
     {
@@ -1097,10 +1269,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1104,
-        -800
+        -3072,
+        -1136
       ],
-      "id": "cancelar-error-0012",
+      "id": "fcc68b6d-094c-445b-9bf6-92a68949a919",
       "name": "Respuesta Cancelar Error"
     }
   ],
@@ -1170,27 +1342,6 @@
         [
           {
             "node": "Procesar Registro",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Buscar Tutoria (Consultar)",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Buscar Tutoria (Cancelar)",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Menu Principal",
             "type": "main",
             "index": 0
           }
@@ -1483,13 +1634,6 @@
             "type": "main",
             "index": 0
           }
-        ],
-        [
-          {
-            "node": "Menu Principal",
-            "type": "main",
-            "index": 0
-          }
         ]
       ]
     },
@@ -1693,15 +1837,13 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": false
+    "executionOrder": "v1"
   },
-  "versionId": "ece8f1b1-01e1-4b05-8d55-0ba97ae83c74",
+  "versionId": "23105ac3-b4b8-4f78-b962-063041caef7d",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "489454830b805717743ac4c8538048d101d7e28dd0d41eae12050f20151ec3b0"
+    "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
   },
-  "id": "AzNxoTCRBKx0dlCl",
+  "id": "aafcM7Lba2soYTGP",
   "tags": []
 }
