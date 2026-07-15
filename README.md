@@ -1,72 +1,93 @@
-# TutorBot — Sistema Automatizado de Asignación de Tutorías
+# 📚 TutorBot -- Sistema Automatizado de Gestión de Tutorías Académicas
 
-##  Integrántes
+Sistema desarrollado en **n8n** para automatizar la gestión de tutorías
+académicas mediante la integración de **Discord**, **Google Sheets** y
+un motor inteligente de asignación.
 
-- Natlia Rolón
-- Alejandro Camacho
+## 👥 Integrantes
 
-## Introducción
+-   Natalia Rolón
+-   Alejandro Camacho
 
-En el entorno educativo actual, coordinar asesorías académicas suele ser un proceso manual y desordenado: los estudiantes dependen de correos o mensajes informales para encontrar tutor, y los tutores no cuentan con una agenda centralizada. Esto genera cruces de horario, materias sin atender y falta de trazabilidad.
+## 📖 Introducción
 
+En el entorno educativo actual, la coordinación de asesorías académicas
+suele realizarse mediante procesos manuales, generando retrasos, cruces
+de horario y poca trazabilidad.
 
-**TutorBot** es una solución automatizada construida en **n8n** que conecta estudiantes con tutores mediante un motor de asignación inteligente, gestionando todo el ciclo de la asesoría: desde la solicitud inicial hasta su finalización.
+**TutorBot** automatiza este proceso utilizando **n8n** como motor de
+automatización, **Discord** como interfaz conversacional y **Google
+Sheets** como base de datos. El sistema administra el ciclo completo de
+una tutoría, desde la solicitud hasta su finalización.
 
-## Objetivos
+## 🎯 Objetivos
 
-- Desarrollar un sistema automatizado de gestión de tutorías que integre WhatsApp, Google Sheets y lógica de asignación.
-- Implementar un motor de búsqueda que asocie automáticamente materia, tutor y horario libre.
-- Diseñar una interfaz conversacional para que el estudiante se autogestione (solicitar, consultar, cancelar).
-- Automatizar el control de estados de la tutoría (Solicitada, Asignada, Confirmada, Finalizada, Cancelada).
-- Generar reportes automáticos de actividad para la coordinación académica.
-- Validar disponibilidad en tiempo real para evitar cruces de agenda o doble reserva.
-- 
+-   Desarrollar un sistema automatizado que integre Discord, Google
+    Sheets y n8n.
+-   Asignar automáticamente tutores según materia y disponibilidad.
+-   Gestionar el estado de las tutorías.
+-   Evitar cruces de horarios.
+-   Mantener un historial centralizado de la información.
 
-## Descripción del sistema
+## 🛠 Tecnologías utilizadas
 
-### Interfaz en WhatsApp
-Punto de contacto único donde el estudiante puede:
-- Registrarse como estudiante.
-- Seleccionar materias mediante menús numéricos.
-- Consultar el estado de sus solicitudes.
-- Cancelar una tutoría.
+  Tecnología      Uso
 
-### Motor de automatización (n8n)
-- **Gestión de sesiones:** mantiene el estado del usuario para guiarlo en flujos de varios pasos (wizard), usando la hoja `SESSIONS`.
-- **Lógica de asignación:** busca tutores que coincidan con la materia solicitada y tengan horario libre.
-- **Notificaciones:** envía mensajes de confirmación al estudiante (y al tutor, según el flujo) cuando hay un emparejamiento o cambio de estado.
+--------------- ----------------------
 
-### Modelo de datos (Google Sheets — `TutorBot_DB`)
+  n8n             Automatización
+  Google Sheets   Base de datos
+  Google Cloud    OAuth
+  Discord         Interfaz del usuario
+  JavaScript      Expresiones en n8n
+  
 
-**Hoja TUTORES**
-`id_tutor, nombre, especialidad_materias, estado (Activo/Inactivo)`
+## ⚙ Descripción del sistema
 
-**Hoja DISPONIBILIDAD**
-`id_dispo, id_tutor, dia_semana, hora_inicio, hora_fin, estado (Libre/Ocupado)`
+### Interfaz en Discord
 
-**Hoja TUTORIAS**
+-   Registro de estudiantes.
+-   Solicitud de tutorías.
+-   Consulta del estado.
+-   Cancelación de tutorías.
+
+### Motor de Automatización (n8n)
+
+-   Gestión de sesiones.
+-   Lógica de asignación.
+-   Validación de disponibilidad.
+-   Registro y actualización de tutorías.
+-   Notificaciones.
+
+## 🗄 Modelo de datos
+
+### TUTORES
+
+`id_tutor, nombre, especialidad_materias, estado`
+
+### DISPONIBILIDAD
+
+`id_dispo, id_tutor, dia_semana, hora_inicio, hora_fin, estado`
+
+### TUTORIAS
+
 `id_tutoria, id_estudiante, id_tutor, materia, fecha, hora, estado`
 
-**Hoja SESSIONS**
-`WhatShapp_user, pantalla_actual, paso_actual, datos_parciales`
+### SESSIONS
 
-### Flujo guiado — "Solicitar Tutoría"
-1. **Materia:** el bot muestra las materias disponibles.
-2. **Fecha:** el usuario ingresa la fecha.
-3. **Búsqueda:** el sistema busca tutores disponibles.
-4. **Confirmación:** el usuario confirma tutor y horario.
-5. **Notificación:** la tutoría queda "Asignada" y se avisa al tutor.
+`discord_user, pantalla_actual, paso_actual, datos_parciales`
 
-## Resultado esperado
+## 🔄 Flujo "Solicitar Tutoría"
 
-- Reducción significativa en el tiempo de asignación de tutorías frente al proceso manual.
-- Trazabilidad total: historial completo de quién solicitó, quién atendió y cuándo terminó.
-- Escalabilidad para gestionar múltiples tutores y estudiantes simultáneamente.
-- Experiencia de usuario amigable, guiada paso a paso, sin necesidad de manuales.
+1.  Selección de materia.
+2.  Ingreso de fecha.
+3.  Búsqueda automática.
+4.  Confirmación.
+5.  Registro como **Asignada**.
 
-## Estructura del proyecto
+## 📁 Estructura del proyecto
 
-```
+``` text
 Proyecto_TutorBot_RolonNatalia_CamachoAlejandro/
 ├── evidencias/
 ├── workflows/
@@ -78,50 +99,81 @@ Proyecto_TutorBot_RolonNatalia_CamachoAlejandro/
 └── README.md
 ```
 
-## Instrucciones de instalación y uso
+## 🚀 Instalación
 
-1. Clonar este repositorio.
-2. Tener una instancia de **n8n** corriendo (local o cloud).
-3. Importar cada archivo `.json` de la carpeta `workflows/` en n8n (menú *Import from File*).
-4. Configurar las credenciales:
-   - **Google Sheets OAuth2** apuntando al documento `TutorBot_DB`.
-   - **Twilio** con el número de WhatsApp Sandbox del proyecto.
-5. Activar los workflows y probar enviando un mensaje al número de WhatsApp Sandbox configurado.
+1.  Clonar el repositorio.
+2.  Ejecutar n8n.
+3.  Importar los archivos `.json` de `workflows/`.
+4.  Configurar Google Sheets OAuth2.
+5.  Configurar el bot de Discord.
+6.  Activar los workflows.
 
-## Pruebas realizadas
-
-**Estado:** Casos de "Consultar Tutoría" y "Cancelar Tutoría"
+## 🧪 Pruebas realizadas
 
 ### Consultar Tutoría
 
-| # | Caso | Entrada | Resultado esperado | Resultado obtenido |
-|---|------|---------|---------------------|---------------------|
-| 8 | Consulta con id válido | `id_tutoria = TU001` (existente en la hoja TUTORIAS) | Se muestra "Tutoría encontrada correctamente" | ✅ Correcto — mostró "Tutoría encontrada correctamente." |
-| 9 | Consulta con id inexistente | `id_tutoria = TU999` (no existe) | Se muestra "Tutoría no encontrada." | ✅ Correcto — mostró "Tutoría no encontrada." |
-| 10 | Consulta con campo vacío | El usuario no envía ningún `id_tutoria` | El sistema cae en la rama False (no encontrada) sin generar error | Pendiente (opcional) |
+  Caso                  Entrada   Resultado esperado      Resultado obtenido
+
+--------------------- --------- ----------------------- --------------------
+
+  Tutoría existente     TU001     Mostrar tutoría         ✅ Correcto
+  Tutoría inexistente   TU999     Tutoría no encontrada   ✅ Correcto
+  Campo vacío           Sin ID    Mensaje de error        Pendiente
 
 ### Cancelar Tutoría
 
-| # | Caso | Entrada | Resultado esperado | Resultado obtenido |
-|---|------|---------|---------------------|---------------------|
-| 11 | Cancelación exitosa | `id_tutoria` válido | El estado de la tutoría cambia a "Cancelada" y la franja correspondiente en DISPONIBILIDAD vuelve a "libre" | ✅ Correcto — estado cambió a "Cancelada" y disponibilidad quedó en "libre" |
-| 12 | Cancelación con id inexistente | `id_tutoria = TU0099` (no existe) | Se muestra "Tutoría no encontrada.", no se modifica ninguna hoja | ✅ Correcto — cayó en rama False, mostró "Respuesta Error" sin tocar ninguna hoja |
-| 13 | Cancelación de tutoría ya cancelada | `id_tutoria` de una tutoría cuyo estado ya es "Cancelada" | (Definir con Natalia) — idealmente el sistema informa que ya estaba cancelada | Pendiente (opcional) |
+  Caso                  Entrada   Resultado esperado          Resultado obtenido
 
-#### Nota técnica (limitación conocida)
-El nodo "Liberar Horario Tutor" solo puede matchear la fila de Disponibilidad por `id_tutor` (n8n no permitió seleccionar más de una columna en esta versión). Si un tutor tiene varias franjas horarias, esto libera todas sus franjas en vez de solo la específica que se canceló. Mejora futura: usar mapeo con múltiples columnas de match (`id_tutor` + `dia_semana` + `hora_inicio`).
+--------------------- --------- --------------------------- --------------------
 
-## Evidencia (capturas de ejecución real)
+  Tutoría existente     TU001     Cancelada y horario libre   ✅ Correcto
+  Tutoría inexistente   TU999     Error                       ✅ Correcto
+  Ya cancelada          TU005     Informar estado             Pendiente
 
-**Cancelar Tutoría — caso exitoso (#11):** ejecución completa, rama True, todos los nodos con check verde hasta "Respuesta OK".
+### Nota técnica
+
+El nodo **Liberar Horario Tutor** actualmente identifica registros
+utilizando únicamente `id_tutor`. Como mejora futura se recomienda
+realizar el emparejamiento utilizando múltiples columnas (`id_tutor`,
+`dia_semana` y `hora_inicio`) para liberar únicamente la franja
+correspondiente.
+
+## 📸 Evidencias
+
+**Cancelar Tutoría --- caso exitoso**
 
 ![Cancelar Tutoría exitosa](./evidencias/cancelar_tutoria_exitosa.png)
 
-**Cancelar Tutoría — id inexistente (#12):** filtro con `TU0099` (no existe) y ejecución cayendo correctamente en rama False → "Respuesta Error".
+**Cancelar Tutoría --- id inexistente**
 
-![Cancelar Tutoría filtro id inexistente](./evidencias/cancelar_id_inexistente_filtro.png)
-![Cancelar Tutoría id inexistente exitoso](./evidencias/cancelar_id_inexistente_exitoso.png)
+![Cancelar Tutoría
+filtro](./evidencias/cancelar_id_inexistente_filtro.png)
 
-**Consultar Tutoría — filtro configurado (#8):** nodo "Get row(s) in sheet" filtrando por `id_tutoria = TU001`.
+![Cancelar Tutoría
+resultado](./evidencias/cancelar_id_inexistente_exitoso.png)
 
-![Consultar Tutoría filtro](./evidencias/consultar_tutoria_filtro.png)
+**Consultar Tutoría**
+
+![Consultar Tutoría](./evidencias/consultar_tutoria_filtro.png)
+
+## 🚀 Mejoras futuras
+
+-   Integración con Google Calendar.
+-   Reportes automáticos.
+-   Dashboard administrativo.
+-   Recordatorios automáticos.
+-   Estadísticas por materia.
+
+## ✅ Resultado esperado
+
+-   Reducción del tiempo de asignación.
+-   Eliminación de cruces de horario.
+-   Mayor trazabilidad.
+-   Automatización del proceso.
+
+## 📌 Conclusiones
+
+TutorBot demuestra cómo **n8n**, **Discord** y **Google Sheets** pueden
+integrarse para automatizar la gestión de tutorías académicas,
+reduciendo tiempos de respuesta y mejorando la administración de la
+información mediante una arquitectura modular y escalable.
