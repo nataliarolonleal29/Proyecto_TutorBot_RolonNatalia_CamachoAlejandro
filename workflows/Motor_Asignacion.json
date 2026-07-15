@@ -1,84 +1,174 @@
 {
-  "name": "Backup_Funcional_WF2_Motor_Asignacion",
+  "name": "TutorBot_WhatsApp_Twilio_Final",
   "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-tutorbot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -928,
+        208
+      ],
+      "id": "150a94f4-8e51-4162-9a20-9812dc4773ad",
+      "name": "Twilio Webhook",
+      "webhookId": "405665d9-386f-4d2f-955b-9d71d4455dfa"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body || $json;\n// Capturar el mensaje y limpiar el formato del teléfono de Twilio\nconst mensaje = (body.Body || '').toString().trim();\nconst telefono = (body.From || '').toString().replace('whatsapp:', '').trim();\nconst usuarioNombre = body.ProfileName || 'Estudiante';\n\nif (!telefono) {\n  throw new Error('No se detectó un número de teléfono válido.');\n}\n\nreturn [{\n  json: {\n    mensaje,\n    telefono,\n    usuarioNombre\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        208
+      ],
+      "id": "1d0ecdad-b0d2-44b4-a3bb-37510026b659",
+      "name": "Extraer Datos WhatsApp"
+    },
     {
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
-          "mode": "id"
+          "mode": "id",
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8"
         },
         "sheetName": {
           "__rl": true,
-          "value": 1846450151,
-          "mode": "list",
-          "cachedResultName": "Disponibilidad",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1846450151"
+          "value": "SESSIONS",
+          "mode": "name"
         },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -1808,
-        -240
-      ],
-      "id": "81bbe22d-24b1-4a1a-8da2-bfd3728fa117",
-      "name": "Disponibilidad",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
+        "filtersUI": {
+          "values": [
             {
-              "id": "6c2f1c5c-3970-41a7-ad81-9bc529c10f43",
-              "name": "id_estudiante",
-              "value": "E001",
-              "type": "string"
-            },
-            {
-              "id": "484da84e-7293-4ae9-bd82-687697840c7d",
-              "name": "hora_preferida",
-              "value": "08:00",
-              "type": "string"
-            },
-            {
-              "id": "26a5b12b-b5b9-4ab3-903a-75b21e7d5cf2",
-              "name": "mensaje",
-              "value": "2",
-              "type": "string"
+              "lookupColumn": "WhatShapp_user",
+              "lookupValue": "={{ $json.telefono }}"
             }
           ]
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
       "position": [
-        -2784,
-        -224
+        -272,
+        208
       ],
-      "id": "13eea30e-b949-4ca4-bd04-8b9c02bcef7a",
-      "name": "Solicitud"
+      "id": "195ac3f8-0c24-4a7e-aff9-64b05c28681c",
+      "name": "Buscar Sesión Usuario",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
-        "jsCode": "const diasSemana = {\n  \"Domingo\": 0, \"Lunes\": 1, \"Martes\": 2,\n  \"Miércoles\": 3, \"Miercoles\": 3,\n  \"Jueves\": 4, \"Viernes\": 5,\n  \"Sábado\": 6, \"Sabado\": 6\n};\n\nfunction proximaFecha(diaSemanaTexto) {\n  const hoy = new Date();\n  const diaObjetivo = diasSemana[diaSemanaTexto];\n  if (diaObjetivo === undefined) return null;\n  const diaActual = hoy.getDay();\n  let diff = diaObjetivo - diaActual;\n  if (diff < 0) diff += 7;\n  const resultado = new Date(hoy);\n  resultado.setDate(hoy.getDate() + diff);\n  const yyyy = resultado.getFullYear();\n  const mm = String(resultado.getMonth() + 1).padStart(2, '0');\n  const dd = String(resultado.getDate()).padStart(2, '0');\n  return `${yyyy}-${mm}-${dd}`;\n}\n\nconst opciones = [];\nconst vistos = new Set();\n\nfor (const item of items) {\n\n  const tutor = item.json;\n\n  const claveUnica = `${tutor.id_tutor}-${tutor.dia_semana}-${tutor.hora_inicio}`;\n\n  if (vistos.has(claveUnica)) {\n    continue;\n  }\n\n  vistos.add(claveUnica);\n\n  opciones.push({\n    opcion: opciones.length + 1,\n    id_tutor: tutor.id_tutor,\n    nombre_tutor: tutor.nombre,\n    fecha: proximaFecha(tutor.dia_semana),\n    dia_semana: tutor.dia_semana,\n    hora_inicio: tutor.hora_inicio,\n    hora_fin: tutor.hora_fin,\n    estado: tutor.estado\n  });\n}\n\nreturn opciones.slice(0,3).map(opcion => ({\n  json: opcion\n}));"
+        "dataType": "string",
+        "value1": "={{ $json.pantalla_actual || 'NUEVO' }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "MENU_PRINCIPAL",
+              "output": 0
+            },
+            {
+              "value2": "MENU_MATERIAS",
+              "output": 1
+            },
+            {
+              "value2": "ESPERANDO_CONFIRMACION",
+              "output": 2
+            },
+            {
+              "value2": "REGISTRO",
+              "output": 3
+            },
+            {
+              "value2": "CONSULTAR",
+              "output": 4
+            },
+            {
+              "value2": "CANCELAR",
+              "output": 5
+            }
+          ]
+        },
+        "fallbackOutput": 6
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        208
+      ],
+      "id": "ffe6e1ee-92f0-475f-8143-39e83abc25bb",
+      "name": "Enrutador de Estados"
+    },
+    {
+      "parameters": {
+        "jsCode": "const datosInput = $('Extraer Datos WhatsApp').first().json;\n\nconst saludo = `👋 ¡Hola ${datosInput.usuarioNombre}! Bienvenido a *TutorBot* 🤖\\n\\n`;\nconst menu = `Por favor, selecciona la materia para tu asesoría ingresando el número correspondiente:\\n\\n1️⃣ JavaScript\\n2️⃣ Python\\n3️⃣ Java\\n4️⃣ Bases de Datos\\n5️⃣ HTML y CSS`;\n\nreturn [{\n  json: {\n    telefono: datosInput.telefono,\n    respuesta: saludo + menu,\n    siguiente_pantalla: 'MENU_MATERIAS'\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1392,
-        -240
+        224,
+        -16
       ],
-      "id": "beaf160e-4354-4b64-90e2-e2edf057af22",
-      "name": "Motor Inteligente"
+      "id": "b9e0cee6-8992-48c0-a259-1bfb0d22374c",
+      "name": "Menu Inicial"
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $('Extraer Datos WhatsApp').first().json.mensaje;\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\n\nconst materias = {\n  \"1\": \"JavaScript\",\n  \"2\": \"Python\",\n  \"3\": \"Java\",\n  \"4\": \"Bases de Datos\",\n  \"5\": \"HTML y CSS\"\n};\n\nconst materiaSeleccionada = materias[msg];\n\nif (!materiaSeleccionada) {\n  return [{\n    json: {\n      telefono,\n      error: true,\n      respuesta: \"⚠️ Opción no válida. Por favor selecciona un número del 1 al 5 para elegir tu materia.\",\n      siguiente_pantalla: \"MENU_MATERIAS\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    telefono,\n    error: false,\n    materia_seleccionada: materiaSeleccionada,\n    respuesta: `Perfecto 👍\\nSeleccionaste: *${materiaSeleccionada}*\\n\\nBuscando tutores disponibles...`    \n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        208
+      ],
+      "id": "6d7d8084-8b40-4018-9210-c8e97fdb6008",
+      "name": "Procesar Materia"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "check-error",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        208
+      ],
+      "id": "a4515a06-35fb-4716-88eb-63c25173fa73",
+      "name": "¿Materia Inválida?"
     },
     {
       "parameters": {
@@ -89,132 +179,150 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": 659472881,
-          "mode": "list",
-          "cachedResultName": "Tutores",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=659472881"
+          "value": "Tutores",
+          "mode": "name"
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -2288,
-        -240
+        656,
+        224
       ],
-      "id": "54730045-6ec2-4da1-be53-188876f5f41a",
-      "name": "Tutores",
+      "id": "b1249470-538f-436e-a983-d0af0da48337",
+      "name": "Descargar Tutores",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
     {
       "parameters": {
-        "from": "+14155238886",
-        "to": "={{ $json.telefono || '+573016218473' }}",
-        "toWhatsapp": true,
-        "message": "={{ $json.mensaje }}",
+        "jsCode": "const materia = $('Procesar Materia').first().json.materia_seleccionada;\nreturn items.filter(item => \n  item.json.estado === \"Activo\" && \n  item.json.especialidad_materias === materia\n);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        224
+      ],
+      "id": "6c1b0bea-fce9-4887-9bf8-59bf8f2c83ca",
+      "name": "Filtrar Tutores"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Disponibilidad",
+          "mode": "name"
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
       "position": [
-        -816,
-        -352
+        1056,
+        224
       ],
-      "id": "73712fa1-f61e-4df5-9d8d-7fbd9f642a41",
-      "name": "Enviar mensaje WhatsApp",
+      "id": "105f49d1-05fb-4bbe-92e1-dcb50fa09c07",
+      "name": "Descargar Disponibilidades",
       "credentials": {
-        "twilioApi": {
-          "id": "y77sTKUGd8m3qMAU",
-          "name": "Twilio account"
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const opciones = items.map(item => item.json);\n\nconst materia = $('Procesar mensaje usuario')\n.first()\n.json\n.materia_seleccionada;\n\nconst telefono = $('Procesar mensaje usuario')\n.first()\n.json\n.telefono;\n\nlet mensaje = \"👋 Hola.\\n\\n\";\nmensaje += `📚 Materia seleccionada: ${materia}\\n\\n`;\nmensaje += \"Encontré estas opciones disponibles para tu asesoría:\\n\\n\";\n\nfor (const opcion of opciones) {\n\n  mensaje += `👨‍🏫 ${opcion.opcion}. ${opcion.nombre_tutor}\\n`;\n  mensaje += `📅 ${opcion.fecha}\\n`;\n  mensaje += `⏰ ${opcion.hora_inicio} - ${opcion.hora_fin}\\n\\n`;\n\n}\n\nmensaje += \"✍️ Responde con el número de la opción que prefieras.\";\n\nreturn [\n{\n  json:{\n    mensaje,\n    telefono\n  }\n}\n];"
+        "jsCode": "const tutoresValidos = $('Filtrar Tutores').all().map(t => t.json.id_tutor);\nreturn items.filter(item => \n  tutoresValidos.includes(item.json.id_tutor) && \n  item.json.estado === \"Libre\"\n);"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -992,
-        -352
+        1248,
+        224
       ],
-      "id": "76db005b-62e0-46d0-811e-3e2a197cd2fe",
-      "name": "Generar mensaje"
+      "id": "31c5032c-8f70-4cc9-bfb3-ddc2485af83e",
+      "name": "Cruzar Disponibilidad"
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "tutorbot",
-        "responseMode": "responseNode",
+        "jsCode": "const diasSemana = {\n  \"Domingo\": 0, \"Lunes\": 1, \"Martes\": 2,\n  \"Miércoles\": 3, \"Miercoles\": 3,\n  \"Jueves\": 4, \"Viernes\": 5,\n  \"Sábado\": 6, \"Sabado\": 6\n};\n\nfunction proximaFecha(diaTexto) {\n  const hoy = new Date();\n  const diaObjetivo = diasSemana[diaTexto];\n  if (diaObjetivo === undefined) return null;\n  const diaActual = hoy.getDay();\n  let diff = diaObjetivo - diaActual;\n  if (diff <= 0) diff += 7;\n  const res = new Date(hoy);\n  res.setDate(hoy.getDate() + diff);\n  return res.toISOString().split('T')[0];\n}\n\nconst tutoresMap = {};\n$('Filtrar Tutores').all().forEach(t => {\n  tutoresMap[t.json.id_tutor] = t.json.nombre;\n});\n\nconst opciones = [];\nlet counter = 1;\n\nfor (const dispo of items) {\n  const d = dispo.json;\n  opciones.push({\n    opcion: counter,\n    id_tutor: d.id_tutor,\n    nombre_tutor: tutoresMap[d.id_tutor] || \"Tutor\",\n    fecha: proximaFecha(d.dia_semana),\n    dia_semana: d.dia_semana,\n    hora_inicio: d.hora_inicio,\n    hora_fin: d.hora_fin\n  });\n  counter++;\n  if (counter > 3) break;\n}\n\nreturn opciones.map(op => ({ json: op }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        224
+      ],
+      "id": "dbec7e9b-7f10-4f61-8ba3-1f6127db3cbc",
+      "name": "Motor de Asignación"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValueString": ""
+          },
+          "conditions": [
+            {
+              "id": "check-vacio",
+              "leftValue": "={{ $items().length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        -3536,
-        -128
+        1664,
+        128
       ],
-      "id": "8db5d203-0b6d-461d-810c-2475ce78b231",
-      "name": "Webhook",
-      "webhookId": "d1a9a914-9dee-47bc-a6f7-e74890f5dad8"
+      "id": "2eb0fd24-b524-4d8a-99ef-cf3602f7beed",
+      "name": "¿Hay Opciones?"
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.5,
-      "position": [
-        -3328,
-        -128
-      ],
-      "id": "eea03fc6-dc37-444f-a2ed-d571501c1574",
-      "name": "Respond to Webhook"
-    },
-    {
-      "parameters": {
-        "jsCode": "const mensaje = ($json.mensaje || \"\").toLowerCase().trim();\n\nlet respuesta = \"\";\nlet materiaSeleccionada = null;\n\n\nif (mensaje === \"hola\" || mensaje === \"inicio\") {\n\n  respuesta =\n`👋 Bienvenido a TutorBot 🤖\n\nSelecciona la materia para tu asesoría:\n\n1️⃣ JavaScript\n2️⃣ Python\n3️⃣ Java\n4️⃣ Bases de Datos\n5️⃣ HTML y CSS`;\n\n} \n\nelse if (mensaje === \"1\") {\n\n  materiaSeleccionada = \"JavaScript\";\n\n  respuesta = \n`Perfecto 👍\n\nSeleccionaste:\n💻 JavaScript\n\nBuscando tutores disponibles...`;\n\n}\n\nelse if (mensaje === \"2\") {\n\n  materiaSeleccionada = \"Python\";\n\n  respuesta = \n`Perfecto 👍\n\nSeleccionaste:\n🐍 Python\n\nBuscando tutores disponibles...`;\n\n}\n\nelse if (mensaje === \"3\") {\n\n  materiaSeleccionada = \"Java\";\n\n  respuesta = \n`Perfecto 👍\n\nSeleccionaste:\n☕ Java\n\nBuscando tutores disponibles...`;\n\n}\n\nelse if (mensaje === \"4\") {\n\n  materiaSeleccionada = \"Bases de Datos\";\n\n  respuesta =\n`Perfecto 👍\n\nSeleccionaste:\n🗄️ Bases de Datos\n\nBuscando tutores disponibles...`;\n\n}\n\nelse if (mensaje === \"5\") {\n\n  materiaSeleccionada = \"HTML y CSS\";\n\n  respuesta =\n`Perfecto 👍\n\nSeleccionaste:\n🌐 HTML y CSS\n\nBuscando tutores disponibles...`;\n\n}\n\nelse {\n\n  respuesta =\n`No entendí tu respuesta 😅\n\nPor favor escribe:\nHola\npara ver el menú de materias.`;\n\n}\n\n\nreturn [\n{\njson:{\nmensaje_usuario: mensaje,\nmateria_seleccionada: materiaSeleccionada,\nrespuesta,\ntelefono: $json.telefono || null\n}\n}\n];"
+        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: \"😔 Lo siento, en este momento no tenemos tutores disponibles para la materia solicitada. Por favor, intenta más tarde escribiendo *Hola*.\",\n    siguiente_pantalla: \"NUEVO\"\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2528,
-        -240
+        1872,
+        128
       ],
-      "id": "f476b8b2-f20e-44cb-9554-226031740cad",
-      "name": "Procesar mensaje usuario"
+      "id": "027bbb82-42e6-4c0e-87d5-2eb4393c5680",
+      "name": "Handler Sin Tutores"
     },
     {
       "parameters": {
-        "jsCode": "const materia = $('Procesar mensaje usuario')\n.first()\n.json\n.materia_seleccionada;\n\n\nconst tutoresFiltrados = items.filter(item => {\n\n  return (\n    item.json.estado_tutor === \"Activo\" &&\n    item.json.especialidad_materias === materia\n  );\n\n});\n\n\nreturn tutoresFiltrados;"
+        "jsCode": "const opciones = items.map(i => i.json);\nconst materia = $('Procesar Materia').first().json.materia_seleccionada;\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\n\nlet msg = `👨‍🏫 *Opciones de asesoría para ${materia}:*\\n\\n`;\n\nopciones.forEach(op => {\n  msg += `*${op.opcion}*️⃣ ${op.nombre_tutor}\\n📅 ${op.fecha} (${op.dia_semana})\\n⏰ ${op.hora_inicio} a ${op.hora_fin}\\n\\n`;\n});\n\nmsg += \"✍️ Responde con el *número* de la opción que desees agendar.\";\n\nreturn [{\n  json: {\n    telefono,\n    respuesta: msg,\n    siguiente_pantalla: \"ESPERANDO_CONFIRMACION\"\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2032,
-        -240
+        1856,
+        336
       ],
-      "id": "3940c2c5-0533-4431-8dfc-88bd34fc142d",
-      "name": "Filtrar tutores por materia"
-    },
-    {
-      "parameters": {
-        "jsCode": "const tutores = $('Filtrar tutores por materia').all();\n\nconst idsTutores = new Set(\n  tutores.map(item => item.json.id_tutor)\n);\n\nreturn items.filter(item =>\n  idsTutores.has(item.json.id_tutor)\n);"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1600,
-        -240
-      ],
-      "id": "cafb90b7-3868-43e3-8a2a-11808a4c6854",
-      "name": "Filtrar disponibilidad"
+      "id": "7f43dcc0-4038-445a-8fe1-24e3bcfa4f0e",
+      "name": "Construir Menú Opciones"
     },
     {
       "parameters": {
@@ -226,173 +334,43 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": 1863538079,
-          "mode": "list",
-          "cachedResultName": "ReservasPendientes",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1863538079"
+          "value": "ReservasPendientes",
+          "mode": "name"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id_chat": "={{ $json.id_chat }}",
+            "id_chat": "={{ $('Extraer Datos WhatsApp').first().json.telefono }}",
             "opcion": "={{ $json.opcion }}",
             "id_tutor": "={{ $json.id_tutor }}",
             "nombre_tutor": "={{ $json.nombre_tutor }}",
-            "materia": "={{ $json.materia }}",
+            "materia": "={{ $('Procesar Materia').first().json.materia_seleccionada }}",
             "fecha": "={{ $json.fecha }}",
+            "dia_semana": "={{ $json.dia_semana }}",
             "hora_inicio": "={{ $json.hora_inicio }}",
             "hora_fin": "={{ $json.hora_fin }}",
-            "estado": "={{ $json.estado }}",
-            "fecha_creacion": "={{ $json.fecha_creacion }}",
-            "dia_semana": "={{ $json.dia_semana }}"
+            "estado": "Pendiente",
+            "fecha_creacion": "={{ new Date().toISOString() }}"
           },
           "matchingColumns": [],
-          "schema": [
-            {
-              "id": "id_chat",
-              "displayName": "id_chat",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "opcion",
-              "displayName": "opcion",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "id_tutor",
-              "displayName": "id_tutor",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "nombre_tutor",
-              "displayName": "nombre_tutor",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "materia",
-              "displayName": "materia",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "fecha",
-              "displayName": "fecha",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "dia_semana",
-              "displayName": "dia_semana",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "hora_inicio",
-              "displayName": "hora_inicio",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "hora_fin",
-              "displayName": "hora_fin",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "estado",
-              "displayName": "estado",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "fecha_creacion",
-              "displayName": "fecha_creacion",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
+          "schema": []
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -992,
-        -128
+        1648,
+        400
       ],
-      "id": "d8ead386-f472-4c60-8e35-7bcd14a6bf54",
-      "name": "Guardar reservas pendientes",
+      "id": "3b425a31-40f8-4bbc-986f-4a9fed939342",
+      "name": "Almacenar Pre-Reservas",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
-    },
-    {
-      "parameters": {
-        "jsCode": "const materia = $('Procesar mensaje usuario')\n.first()\n.json\n.materia_seleccionada;\n\nconst telefono = $('Procesar mensaje usuario')\n.first()\n.json\n.telefono || 'PRUEBA001';\n\nconst ahora = new Date().toISOString();\n\nreturn items.map(item => {\n\n  return {\n\n    json: {\n\n      id_chat: telefono,\n\n      telefono,\n\n      opcion: item.json.opcion,\n\n      id_tutor: item.json.id_tutor,\n\n      nombre_tutor: item.json.nombre_tutor,\n\n      materia: materia,\n\n      fecha: item.json.fecha,\n\n      dia_semana: item.json.dia_semana,\n\n      hora_inicio: item.json.hora_inicio,\n\n      hora_fin: item.json.hora_fin,\n\n      estado: \"Pendiente\",\n\n      fecha_creacion: ahora\n\n    }\n\n  };\n\n});"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1184,
-        -240
-      ],
-      "id": "1219f136-15be-4628-82b7-2b992cad8105",
-      "name": "Preparar Reserva"
-    },
-    {
-      "parameters": {
-        "jsCode": "const opcion = parseInt(($json.mensaje || \"\").trim(), 10);\n\nif (![1, 2, 3].includes(opcion)) {\n  throw new Error(\"La opción debe ser 1, 2 o 3.\");\n}\n\nreturn [\n  {\n    json: {\n      id_chat: ($json.telefono || \"PRUEBA001\"),\n      opcion\n    }\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -2560,
-        0
-      ],
-      "id": "19104543-22eb-4e16-a7b8-239074f9dad3",
-      "name": "Procesar selección"
     },
     {
       "parameters": {
@@ -403,196 +381,69 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": 1863538079,
-          "mode": "list",
-          "cachedResultName": "ReservasPendientes",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1863538079"
+          "value": "ReservasPendientes",
+          "mode": "name"
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -2368,
-        32
+        208,
+        496
       ],
-      "id": "38ef8ca1-8168-461f-b364-6ac9818d9ae1",
-      "name": "Get row(s) in sheet",
+      "id": "a4ff91a2-193d-4d02-8a94-3cd7fa7a83a9",
+      "name": "Cargar Opciones Ofrecidas",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const seleccion = $('Procesar selección').first().json;\n\nconst reserva = items.find(item =>\n  item.json.id_chat === seleccion.id_chat &&\n  Number(item.json.opcion) === seleccion.opcion &&\n  item.json.estado === \"Pendiente\"\n);\n\nif (!reserva) {\n  throw new Error(\"No se encontró una reserva pendiente para esa opción.\");\n}\n\nreturn [reserva];"
+        "jsCode": "const msg = $('Extraer Datos WhatsApp').first().json.mensaje.trim();\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\n\nconst seleccion = parseInt(msg, 10);\nconst pendientes = items.map(i => i.json);\n\nconst reservaElegida = pendientes.find(r => \n  r.id_chat === telefono && \n  parseInt(r.opcion, 10) === seleccion && \n  r.estado === \"Pendiente\"\n);\n\nif (!reservaElegida) {\n  return [{\n    json: {\n      telefono,\n      error: true,\n      respuesta: \"⚠️ Selección inválida. Responde únicamente con el número de la opción elegida (1, 2 o 3).\",\n      siguiente_pantalla: \"ESPERANDO_CONFIRMACION\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    ...reservaElegida,\n    error: false\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2112,
-        112
+        432,
+        496
       ],
-      "id": "1d8476b2-515c-454c-822e-3849aeb1fc4f",
-      "name": "Buscar opción elegida"
+      "id": "e04eb874-6ff5-457e-80b2-928088586984",
+      "name": "Validar Selección"
     },
     {
       "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": 1863538079,
-          "mode": "list",
-          "cachedResultName": "ReservasPendientes",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1863538079"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "estado": "=Confirmada",
-            "id_chat": "={{ $json.id_chat }}"
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValueString": ""
           },
-          "matchingColumns": [
-            "id_chat"
-          ],
-          "schema": [
+          "conditions": [
             {
-              "id": "id_chat",
-              "displayName": "id_chat",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "opcion",
-              "displayName": "opcion",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "id_tutor",
-              "displayName": "id_tutor",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "nombre_tutor",
-              "displayName": "nombre_tutor",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "materia",
-              "displayName": "materia",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "fecha",
-              "displayName": "fecha",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "hora_inicio",
-              "displayName": "hora_inicio",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "hora_fin",
-              "displayName": "hora_fin",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "estado",
-              "displayName": "estado",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "fecha_creacion",
-              "displayName": "fecha_creacion",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "row_number",
-              "displayName": "row_number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true,
-              "readOnly": true,
-              "removed": true
+              "id": "check-err",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
             }
           ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
+          "combinator": "and"
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        -1472,
-        48
+        656,
+        496
       ],
-      "id": "36277477-d60d-46ef-b3b1-d505667747ac",
-      "name": "Actualizar reserva",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
-        }
-      }
+      "id": "282f130a-b003-4515-b90b-434492ab4b83",
+      "name": "¿Selección Inválida?"
     },
     {
       "parameters": {
@@ -608,33 +459,18 @@
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1.3,
       "position": [
-        -1888,
-        -32
+        880,
+        512
       ],
-      "id": "18bd01e4-2557-4f92-8b6b-a595da0cd69f",
-      "name": "Create an event",
+      "id": "22cc39a3-c6bc-4ff8-a01a-6d5d0fb94760",
+      "name": "Agendar Google Calendar",
       "alwaysOutputData": true,
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "Z9JehC3ptmYOv32N",
+          "id": "1jW9IIfIIfa7MKJR",
           "name": "Google Calendar account"
         }
       }
-    },
-    {
-      "parameters": {
-        "mode": "combine",
-        "combineBy": "combineByPosition",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        -1696,
-        144
-      ],
-      "id": "82ca68ff-886b-48a0-8cf1-d9635ae4a6f2",
-      "name": "Merge"
     },
     {
       "parameters": {
@@ -646,215 +482,631 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": 1846450151,
-          "mode": "list",
-          "cachedResultName": "Disponibilidad",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=1846450151"
+          "value": "Disponibilidad",
+          "mode": "name"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id_tutor": "={{ $json.id_tutor }}",
-            "dia_semana": "={{ $json.dia_semana }}",
-            "hora_inicio": "={{ $json.hora_inicio }}",
-            "estado": "=ocupado"
+            "id_tutor": "={{ $('Validar Selección').first().json.id_tutor }}",
+            "dia_semana": "={{ $('Validar Selección').first().json.dia_semana }}",
+            "hora_inicio": "={{ $('Validar Selección').first().json.hora_inicio }}",
+            "estado": "Ocupado"
           },
           "matchingColumns": [
             "id_tutor",
             "dia_semana",
             "hora_inicio"
           ],
-          "schema": [
-            {
-              "id": "id_dispo",
-              "displayName": "id_dispo",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "id_tutor",
-              "displayName": "id_tutor",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "dia_semana",
-              "displayName": "dia_semana",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "hora_inicio",
-              "displayName": "hora_inicio",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "hora_fin",
-              "displayName": "hora_fin",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": true
-            },
-            {
-              "id": "estado",
-              "displayName": "estado",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
+          "schema": []
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1472,
-        -128
+        1088,
+        512
       ],
-      "id": "6ce15a36-b50f-4321-b603-2c9e4bf06535",
-      "name": "Actualizar Disponibilidad",
+      "id": "0041f6ff-126f-447d-b392-bdbaea319a3d",
+      "name": "Cerrar Disponibilidad",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const datos = $json;\n\nlet mensaje = \"✅ Tu asesoría ha sido confirmada.\\n\\n\";\nmensaje += `👩‍🏫 Tutor: ${datos.nombre_tutor}\\n`;\nmensaje += `📚 Materia: ${datos.materia}\\n`;\nmensaje += `📅 Fecha: ${datos.fecha}\\n`;\nmensaje += `🕗 Hora: ${datos.hora_inicio} - ${datos.hora_fin}`;\n\nreturn [\n  {\n    json: {\n      mensaje,\n      telefono: datos.id_chat\n    }\n  }\n];"
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "ReservasPendientes",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_chat": "={{ $('Validar Selección').first().json.id_chat }}",
+            "opcion": "={{ $('Validar Selección').first().json.opcion }}",
+            "estado": "Confirmada"
+          },
+          "matchingColumns": [
+            "id_chat",
+            "opcion"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1296,
+        512
+      ],
+      "id": "ead37283-f956-4bcf-90ab-45cd5d0a0975",
+      "name": "Confirmar Asesoría",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $('Validar Selección').first().json;\n\nlet msg = \"✅ *¡TU ASESORÍA HA SIDO CONFIRMADA!* 🗓️\\n\\n\";\nmsg += `👩‍🏫 *Tutor:* ${r.nombre_tutor}\\n`;\nmsg += `📚 *Materia:* ${r.materia}\\n`;\nmsg += `📅 *Fecha:* ${r.fecha} (${r.dia_semana})\\n`;\nmsg += `🕗 *Hora:* ${r.hora_inicio} - ${r.hora_fin}\\n\\n`;\nmsg += \"Hemos añadido este evento a la agenda. ¡Te esperamos!\";\n\nreturn [{\n  json: {\n    telefono: r.id_chat,\n    respuesta: msg,\n    siguiente_pantalla: \"NUEVO\"\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1472,
-        208
+        1488,
+        512
       ],
-      "id": "5f0ebf36-e76c-459c-929e-e80b57f64909",
-      "name": "Generar Mensaje Confirmacion"
+      "id": "83282608-4e30-41b5-816d-f0ede80851e5",
+      "name": "Mensaje de Éxito"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2288,
+        272
+      ],
+      "id": "13134d24-7611-412f-9d16-103cca95111d",
+      "name": "Merge Salidas"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2480,
+        272
+      ],
+      "id": "49cb8d57-1b4d-4d82-8813-810e8a616e0b",
+      "name": "Guardar Estado DB",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
         "from": "+14155238886",
-        "to": "={{ $json.telefono || '+573016218473' }}",
+        "to": "={{ $json.telefono }}",
         "toWhatsapp": true,
-        "message": "={{ $json.mensaje }}",
+        "message": "={{ $json.respuesta }}",
         "options": {}
       },
       "type": "n8n-nodes-base.twilio",
       "typeVersion": 1,
       "position": [
-        -1248,
-        208
+        2672,
+        272
       ],
-      "id": "5512ada9-7a55-42b7-9cab-314e1757edec",
-      "name": "Enviar Confirmación WhatsApp",
+      "id": "2f09c94b-8d15-4dbe-ae2b-fef315ca2cc0",
+      "name": "Twilio WhatsApp Unificado",
       "credentials": {
         "twilioApi": {
-          "id": "y77sTKUGd8m3qMAU",
+          "id": "ggmacjeqcN2SCcg2",
           "name": "Twilio account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const body = $json.body || $json;\nconst mensaje = (body.Body || body.mensaje || '').toString();\nconst telefono = (body.From || body.from || '').toString().replace('whatsapp:', '');\n\nreturn [\n  {\n    json: {\n      mensaje,\n      telefono\n    }\n  }\n];"
+        "mode": "raw",
+        "jsonOutput": "{\n  \"body\": {\n    \"Body\": \"Hola\",\n    \"From\": \"whatsapp:+573016218473\",\n    \"ProfileName\": \"Estudiante prueba\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        208
+      ],
+      "id": "9cd2ce81-58ea-49e2-a60c-1d036a724c87",
+      "name": "Edit Fields",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const datosInput = $('Extraer Datos WhatsApp').first().json;\n\nconst saludo = `👋 ¡Hola ${datosInput.usuarioNombre}! Bienvenido a *TutorBot* 🤖\\n\\n`;\nconst menu = `¿Qué deseas hacer? Responde con el número:\\n\\n1️⃣ Solicitar una tutoría\\n2️⃣ Registrarme como estudiante\\n3️⃣ Consultar una tutoría\\n4️⃣ Cancelar una tutoría`;\n\nreturn [{\n  json: {\n    telefono: datosInput.telefono,\n    respuesta: saludo + menu,\n    siguiente_pantalla: 'MENU_PRINCIPAL'\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3376,
-        0
+        -48,
+        -200
       ],
-      "id": "9170c4cd-cf3e-4fc7-a55f-ea31f46a3e60",
-      "name": "Extraer Datos WhatsApp"
+      "id": "nuevo-menu-principal-0001",
+      "name": "Menu Principal"
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ ($('Extraer Datos WhatsApp').first().json.mensaje || '').trim() }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "1"
+            },
+            {
+              "value2": "2",
+              "output": 1
+            },
+            {
+              "value2": "3",
+              "output": 2
+            },
+            {
+              "value2": "4",
+              "output": 3
+            }
+          ]
+        },
+        "fallbackOutput": 4
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -200
+      ],
+      "id": "nuevo-switch-menu-principal-0002",
+      "name": "Switch Menu Principal"
+    },
+    {
+      "parameters": {
+        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nconst mensaje = ($('Extraer Datos WhatsApp').first().json.mensaje || '').trim();\nconst mensajeLower = mensaje.toLowerCase();\n\nconst sesionRows = $('Buscar Sesión Usuario').all();\nconst sesionExistente = sesionRows.length > 0 ? sesionRows[0].json : null;\n\nlet paso = (sesionExistente && sesionExistente.pantalla_actual === 'REGISTRO')\n  ? parseInt(sesionExistente.paso_actual, 10)\n  : 0;\nif (isNaN(paso)) paso = 0;\n\nlet datos = {};\ntry {\n  datos = (sesionExistente && sesionExistente.pantalla_actual === 'REGISTRO' && sesionExistente.datos_parciales)\n    ? JSON.parse(sesionExistente.datos_parciales)\n    : {};\n} catch (e) {\n  datos = {};\n}\n\nlet respuesta = '';\nlet nuevoPaso = paso;\nlet pantalla = 'REGISTRO';\nlet completado = false;\n\nif (paso === 0) {\n  nuevoPaso = 1;\n  respuesta = '📝 ¡Vamos a registrarte!\\n\\nPor favor escribe tu nombre completo:';\n  datos = {};\n}\nelse if (paso === 1) {\n  datos.nombre = mensaje;\n  nuevoPaso = 2;\n  respuesta = `Gracias, ${datos.nombre} 😊\\n\\nAhora escribe tu número de documento de identidad:`;\n}\nelse if (paso === 2) {\n  datos.documento = mensaje;\n  nuevoPaso = 3;\n  respuesta = 'Perfecto ✅\\n\\n¿Qué materia te interesa?\\n\\n1️⃣ JavaScript\\n2️⃣ Python\\n3️⃣ Java\\n4️⃣ Bases de Datos\\n5️⃣ HTML y CSS';\n}\nelse if (paso === 3) {\n  const materias = {'1':'JavaScript','2':'Python','3':'Java','4':'Bases de Datos','5':'HTML y CSS'};\n  const materiaElegida = materias[mensaje];\n  if (!materiaElegida) {\n    nuevoPaso = 3;\n    respuesta = 'No reconocí esa opción 😅\\n\\nResponde con un número del 1 al 5.';\n  } else {\n    datos.materia = materiaElegida;\n    nuevoPaso = 4;\n    respuesta = `Confirma tus datos 📋\\n\\n👤 Nombre: ${datos.nombre}\\n🪦 Documento: ${datos.documento}\\n📚 Materia: ${datos.materia}\\n\\n¿Es correcto? Responde SI o NO`;\n  }\n}\nelse if (paso === 4) {\n  if (mensajeLower === 'si' || mensajeLower === 'sí') {\n    completado = true;\n    nuevoPaso = 0;\n    pantalla = 'NUEVO';\n    respuesta = `🎉 ¡Registro completado, ${datos.nombre}!\\n\\nEscribe *menu* para ver las opciones disponibles.`;\n  } else if (mensajeLower === 'no') {\n    nuevoPaso = 1;\n    datos = {};\n    respuesta = 'Sin problema, empecemos de nuevo 🔄\\n\\nEscribe tu nombre completo:';\n  } else {\n    nuevoPaso = 4;\n    respuesta = 'Por favor responde solo SI o NO 🙏';\n  }\n}\n\nreturn [{\n  json: {\n    telefono,\n    respuesta,\n    siguiente_pantalla: pantalla,\n    paso_actual: nuevoPaso,\n    datos_parciales: JSON.stringify(datos),\n    completado,\n    id_estudiante: completado ? telefono : null,\n    nombre_estudiante: completado ? datos.nombre : null,\n    documento: completado ? datos.documento : null,\n    materia_interes: completado ? datos.materia : null,\n    fecha_registro: completado ? new Date().toISOString().slice(0,10) : null\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        -400
+      ],
+      "id": "nuevo-procesar-registro-0003",
+      "name": "Procesar Registro"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-completado-registro",
+              "leftValue": "={{ $json.completado }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -400
+      ],
+      "id": "nuevo-if-registro-completo-0004",
+      "name": "¿Registro Completo?"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "ESTUDIANTES",
+          "mode": "list",
+          "cachedResultName": "ESTUDIANTES"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_estudiante": "={{ $json.id_estudiante }}",
+            "nombre": "={{ $json.nombre_estudiante }}",
+            "documento": "={{ $json.documento }}",
+            "telefono": "={{ $json.telefono }}",
+            "materia_interes": "={{ $json.materia_interes }}",
+            "fecha_registro": "={{ $json.fecha_registro }}"
+          },
+          "matchingColumns": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        -480
+      ],
+      "id": "nuevo-guardar-estudiante-0005",
+      "name": "Guardar Estudiante",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -928,
+        40
+      ],
+      "id": "nuevo-respond-webhook-0008",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: '🔍 Escribe el ID de la tutoría que deseas consultar (ejemplo: TU001):',\n    siguiente_pantalla: 'CONSULTAR'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -560
+      ],
+      "id": "consultar-pedir-id-0001",
+      "name": "Pedir ID Consulta"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Tutorias",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id_tutoria",
+              "lookupValue": "={{ $('Extraer Datos WhatsApp').first().json.mensaje.trim() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        656,
+        -560
+      ],
+      "id": "consultar-buscar-0002",
+      "name": "Buscar Tutoria (Consultar)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "chk-consulta",
+              "leftValue": "={{ $json.id_tutoria }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        -560
+      ],
+      "id": "consultar-if-0003",
+      "name": "¿Tutoria Encontrada? (Consultar)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $json;\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nlet msg = '✅ *Tutoría encontrada:*\\n\\n';\nmsg += `🆔 ID: ${r.id_tutoria}\\n`;\nmsg += `📚 Materia: ${r.materia}\\n`;\nmsg += `📅 Fecha: ${r.fecha}\\n`;\nmsg += `🕗 Hora: ${r.hora}\\n`;\nmsg += `📌 Estado: ${r.estado}\\n\\n`;\nmsg += 'Escribe *menu* para volver al inicio.';\nreturn [{ json: { telefono, respuesta: msg, siguiente_pantalla: 'NUEVO' } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        -640
+      ],
+      "id": "consultar-ok-0004",
+      "name": "Respuesta Consulta OK"
+    },
+    {
+      "parameters": {
+        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: '⚠️ Tutoría no encontrada. Verifica el ID e intenta de nuevo, o escribe *menu* para volver al inicio.',\n    siguiente_pantalla: 'NUEVO'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        -480
+      ],
+      "id": "consultar-error-0005",
+      "name": "Respuesta Consulta Error"
+    },
+    {
+      "parameters": {
+        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: '❌ Escribe el ID de la tutoría que deseas cancelar (ejemplo: TU001):',\n    siguiente_pantalla: 'CANCELAR'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -720
+      ],
+      "id": "cancelar-pedir-id-0006",
+      "name": "Pedir ID Cancelar"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Tutorias",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id_tutoria",
+              "lookupValue": "={{ $('Extraer Datos WhatsApp').first().json.mensaje.trim() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        656,
+        -720
+      ],
+      "id": "cancelar-buscar-0007",
+      "name": "Buscar Tutoria (Cancelar)",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "chk-cancelar",
+              "leftValue": "={{ $json.id_tutoria }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        -720
+      ],
+      "id": "cancelar-if-0008",
+      "name": "¿Tutoria Encontrada? (Cancelar)"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Tutorias",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_tutoria": "={{ $json.id_tutoria }}",
+            "estado": "Cancelada"
+          },
+          "matchingColumns": [
+            "id_tutoria"
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        -800
+      ],
+      "id": "cancelar-actualizar-0009",
+      "name": "Actualizar Estado Tutoria",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Disponibilidad",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_tutor": "={{ $('Buscar Tutoria (Cancelar)').first().json.id_tutor }}",
+            "estado": "Libre"
+          },
+          "matchingColumns": [
+            "id_tutor"
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1312,
+        -800
+      ],
+      "id": "cancelar-liberar-0010",
+      "name": "Liberar Horario Tutor",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $('Buscar Tutoria (Cancelar)').first().json;\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{ json: { telefono, respuesta: `✅ Tu tutoría (ID: ${r.id_tutoria}) fue cancelada correctamente.\\n\\nEscribe *menu* para volver al inicio.`, siguiente_pantalla: 'NUEVO' } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        -800
+      ],
+      "id": "cancelar-ok-0011",
+      "name": "Respuesta Cancelar OK"
+    },
+    {
+      "parameters": {
+        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: '⚠️ Tutoría no encontrada. Verifica el ID e intenta de nuevo, o escribe *menu* para volver al inicio.',\n    siguiente_pantalla: 'NUEVO'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        -800
+      ],
+      "id": "cancelar-error-0012",
+      "name": "Respuesta Cancelar Error"
     }
   ],
   "pinData": {},
   "connections": {
-    "Disponibilidad": {
-      "main": [
-        [
-          {
-            "node": "Filtrar disponibilidad",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Solicitud": {
-      "main": [
-        [
-          {
-            "node": "Procesar mensaje usuario",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Procesar selección",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Motor Inteligente": {
-      "main": [
-        [
-          {
-            "node": "Preparar Reserva",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Tutores": {
-      "main": [
-        [
-          {
-            "node": "Filtrar tutores por materia",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Generar mensaje": {
-      "main": [
-        [
-          {
-            "node": "Enviar mensaje WhatsApp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Webhook": {
+    "Twilio Webhook": {
       "main": [
         [
           {
@@ -870,146 +1122,568 @@
         ]
       ]
     },
-    "Procesar mensaje usuario": {
-      "main": [
-        [
-          {
-            "node": "Tutores",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filtrar tutores por materia": {
-      "main": [
-        [
-          {
-            "node": "Disponibilidad",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filtrar disponibilidad": {
-      "main": [
-        [
-          {
-            "node": "Motor Inteligente",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Preparar Reserva": {
-      "main": [
-        [
-          {
-            "node": "Generar mensaje",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Guardar reservas pendientes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Procesar selección": {
-      "main": [
-        [
-          {
-            "node": "Get row(s) in sheet",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get row(s) in sheet": {
-      "main": [
-        [
-          {
-            "node": "Buscar opción elegida",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Buscar opción elegida": {
-      "main": [
-        [
-          {
-            "node": "Create an event",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create an event": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "Merge": {
-      "main": [
-        [
-          {
-            "node": "Actualizar reserva",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Actualizar Disponibilidad",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Generar Mensaje Confirmacion",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Generar Mensaje Confirmacion": {
-      "main": [
-        [
-          {
-            "node": "Enviar Confirmación WhatsApp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Extraer Datos WhatsApp": {
       "main": [
         [
           {
-            "node": "Procesar mensaje usuario",
+            "node": "Buscar Sesión Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Sesión Usuario": {
+      "main": [
+        [
+          {
+            "node": "Enrutador de Estados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrutador de Estados": {
+      "main": [
+        [
+          {
+            "node": "Switch Menu Principal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Procesar Materia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cargar Opciones Ofrecidas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Procesar Registro",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar Tutoria (Consultar)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar Tutoria (Cancelar)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Menu Principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Materia": {
+      "main": [
+        [
+          {
+            "node": "¿Materia Inválida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Materia Inválida?": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar Tutores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Tutores": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Tutores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Tutores": {
+      "main": [
+        [
+          {
+            "node": "Descargar Disponibilidades",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Disponibilidades": {
+      "main": [
+        [
+          {
+            "node": "Cruzar Disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cruzar Disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Motor de Asignación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Motor de Asignación": {
+      "main": [
+        [
+          {
+            "node": "¿Hay Opciones?",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Procesar selección",
+            "node": "Almacenar Pre-Reservas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay Opciones?": {
+      "main": [
+        [
+          {
+            "node": "Handler Sin Tutores",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Construir Menú Opciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handler Sin Tutores": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir Menú Opciones": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cargar Opciones Ofrecidas": {
+      "main": [
+        [
+          {
+            "node": "Validar Selección",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Selección": {
+      "main": [
+        [
+          {
+            "node": "¿Selección Inválida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Selección Inválida?": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agendar Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendar Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Cerrar Disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cerrar Disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Confirmar Asesoría",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar Asesoría": {
+      "main": [
+        [
+          {
+            "node": "Mensaje de Éxito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje de Éxito": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Salidas": {
+      "main": [
+        [
+          {
+            "node": "Guardar Estado DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Estado DB": {
+      "main": [
+        [
+          {
+            "node": "Twilio WhatsApp Unificado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Extraer Datos WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Menu Inicial": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Menu Principal": {
+      "main": [
+        [
+          {
+            "node": "Menu Inicial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Procesar Registro",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pedir ID Consulta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pedir ID Cancelar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Menu Principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Menu Principal": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Registro": {
+      "main": [
+        [
+          {
+            "node": "¿Registro Completo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Registro Completo?": {
+      "main": [
+        [
+          {
+            "node": "Guardar Estudiante",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Estudiante": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir ID Consulta": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Tutoria (Consultar)": {
+      "main": [
+        [
+          {
+            "node": "¿Tutoria Encontrada? (Consultar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Tutoria Encontrada? (Consultar)": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Consulta OK",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respuesta Consulta Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta Consulta OK": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta Consulta Error": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir ID Cancelar": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Tutoria (Cancelar)": {
+      "main": [
+        [
+          {
+            "node": "¿Tutoria Encontrada? (Cancelar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Tutoria Encontrada? (Cancelar)": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Estado Tutoria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respuesta Cancelar Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Estado Tutoria": {
+      "main": [
+        [
+          {
+            "node": "Liberar Horario Tutor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Liberar Horario Tutor": {
+      "main": [
+        [
+          {
+            "node": "Respuesta Cancelar OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta Cancelar OK": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respuesta Cancelar Error": {
+      "main": [
+        [
+          {
+            "node": "Merge Salidas",
             "type": "main",
             "index": 0
           }
@@ -1019,13 +1693,15 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "570ee983-7420-4bef-baf0-3c6e39e0fe01",
+  "versionId": "ece8f1b1-01e1-4b05-8d55-0ba97ae83c74",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
+    "instanceId": "489454830b805717743ac4c8538048d101d7e28dd0d41eae12050f20151ec3b0"
   },
-  "id": "aafcM7Lba2soYTGP",
+  "id": "AzNxoTCRBKx0dlCl",
   "tags": []
 }
