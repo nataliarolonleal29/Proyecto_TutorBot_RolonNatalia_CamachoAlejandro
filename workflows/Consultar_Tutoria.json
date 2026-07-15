@@ -6,10 +6,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -64,
-        0
+        -800,
+        320
       ],
-      "id": "44372a81-5494-4981-9bb1-20fd2317405a",
+      "id": "f96d09f0-c14f-4b07-b112-295b4bd1fc6e",
       "name": "When clicking ‘Execute workflow’"
     },
     {
@@ -40,10 +40,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        416,
-        0
+        -320,
+        320
       ],
-      "id": "55c00612-fc06-4bf3-a16f-a2f6ebe99940",
+      "id": "fc73c9be-cf8c-4668-8f98-4f22e6c41426",
       "name": "If"
     },
     {
@@ -75,10 +75,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        160,
-        0
+        -576,
+        320
       ],
-      "id": "4d2a6cfc-75ca-4401-937e-9ecf24025d53",
+      "id": "44ccc535-c909-4571-b21e-862d273eea5c",
       "name": "Get row(s) in sheet",
       "alwaysOutputData": true,
       "credentials": {
@@ -105,10 +105,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        624,
-        -96
+        -112,
+        224
       ],
-      "id": "1888efcb-4862-42ae-ac35-2f3c7c57a788",
+      "id": "10775af9-6d2e-4716-82d8-94102636ca37",
       "name": "Respuesta OK"
     },
     {
@@ -128,10 +128,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        624,
-        96
+        -112,
+        416
       ],
-      "id": "a0653806-97b7-42d6-b494-39111aeda475",
+      "id": "72fdeacf-5f63-4b61-a4d6-7d5e28d77a2a",
       "name": "Respuesta Error"
     }
   ],
@@ -182,7 +182,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "4e44902c-a922-4a68-b5ca-17e93f165282",
+  "versionId": "e8eaa4f5-754c-4434-b02b-f5f962b8f766",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
