@@ -10,7 +10,10 @@
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
-      "position": [-320, 96],
+      "position": [
+        -320,
+        96
+      ],
       "id": "b1a2c3d4-0001-4aaa-8000-000000000001",
       "name": "Webhook",
       "webhookId": "registro-estudiante-webhook"
@@ -21,7 +24,10 @@
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
-      "position": [-112, 96],
+      "position": [
+        -112,
+        96
+      ],
       "id": "b1a2c3d4-0002-4aaa-8000-000000000002",
       "name": "Respond to Webhook"
     },
@@ -31,7 +37,10 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-160, 224],
+      "position": [
+        -160,
+        224
+      ],
       "id": "b1a2c3d4-0003-4aaa-8000-000000000003",
       "name": "Extraer Datos WhatsApp"
     },
@@ -45,8 +54,7 @@
         "sheetName": {
           "__rl": true,
           "value": "SESSIONS",
-          "mode": "list",
-          "cachedResultName": "SESSIONS"
+          "mode": "name"
         },
         "filtersUI": {
           "values": [
@@ -60,7 +68,10 @@
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
-      "position": [160, 224],
+      "position": [
+        160,
+        224
+      ],
       "id": "b1a2c3d4-0004-4aaa-8000-000000000004",
       "name": "Buscar Sesion",
       "credentials": {
@@ -76,7 +87,10 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [432, 224],
+      "position": [
+        432,
+        224
+      ],
       "id": "b1a2c3d4-0005-4aaa-8000-000000000005",
       "name": "Procesar Registro"
     },
@@ -91,8 +105,7 @@
         "sheetName": {
           "__rl": true,
           "value": "SESSIONS",
-          "mode": "list",
-          "cachedResultName": "SESSIONS"
+          "mode": "name"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -102,13 +115,18 @@
             "paso_actual": "={{ $json.paso_actual }}",
             "datos_parciales": "={{ $json.datos_parciales }}"
           },
-          "matchingColumns": ["WhatShapp_user"]
+          "matchingColumns": [
+            "WhatShapp_user"
+          ]
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
-      "position": [704, 224],
+      "position": [
+        704,
+        224
+      ],
       "id": "b1a2c3d4-0006-4aaa-8000-000000000006",
       "name": "Actualizar Sesion",
       "credentials": {
@@ -143,7 +161,10 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [976, 224],
+      "position": [
+        976,
+        224
+      ],
       "id": "b1a2c3d4-0007-4aaa-8000-000000000007",
       "name": "Registro Completo?"
     },
@@ -158,8 +179,7 @@
         "sheetName": {
           "__rl": true,
           "value": "ESTUDIANTES",
-          "mode": "list",
-          "cachedResultName": "ESTUDIANTES"
+          "mode": "name"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -177,7 +197,10 @@
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
-      "position": [1248, 96],
+      "position": [
+        1248,
+        96
+      ],
       "id": "b1a2c3d4-0008-4aaa-8000-000000000008",
       "name": "Guardar Estudiante",
       "credentials": {
@@ -197,7 +220,10 @@
       },
       "type": "n8n-nodes-base.twilio",
       "typeVersion": 1,
-      "position": [1248, 352],
+      "position": [
+        1248,
+        352
+      ],
       "id": "b1a2c3d4-0009-4aaa-8000-000000000009",
       "name": "Enviar Mensaje WhatsApp"
     }
@@ -207,40 +233,90 @@
     "Webhook": {
       "main": [
         [
-          { "node": "Respond to Webhook", "type": "main", "index": 0 },
-          { "node": "Extraer Datos WhatsApp", "type": "main", "index": 0 }
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extraer Datos WhatsApp",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
     "Extraer Datos WhatsApp": {
       "main": [
-        [{ "node": "Buscar Sesion", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Buscar Sesion",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Buscar Sesion": {
       "main": [
-        [{ "node": "Procesar Registro", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Procesar Registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Procesar Registro": {
       "main": [
-        [{ "node": "Actualizar Sesion", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Actualizar Sesion",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Actualizar Sesion": {
       "main": [
-        [{ "node": "Registro Completo?", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Registro Completo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Registro Completo?": {
       "main": [
-        [{ "node": "Guardar Estudiante", "type": "main", "index": 0 }],
-        [{ "node": "Enviar Mensaje WhatsApp", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Guardar Estudiante",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mensaje WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Guardar Estudiante": {
       "main": [
-        [{ "node": "Enviar Mensaje WhatsApp", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Enviar Mensaje WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
