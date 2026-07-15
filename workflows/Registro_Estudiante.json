@@ -11,10 +11,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -320,
-        96
+        -1040,
+        -128
       ],
-      "id": "b1a2c3d4-0001-4aaa-8000-000000000001",
+      "id": "3939b6ad-33bb-48b1-9646-dbdff267effd",
       "name": "Webhook",
       "webhookId": "registro-estudiante-webhook"
     },
@@ -25,10 +25,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        -112,
-        96
+        -832,
+        -128
       ],
-      "id": "b1a2c3d4-0002-4aaa-8000-000000000002",
+      "id": "32ea4bd7-192b-4f09-87a3-17920ae829ab",
       "name": "Respond to Webhook"
     },
     {
@@ -38,10 +38,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -160,
-        224
+        -880,
+        16
       ],
-      "id": "b1a2c3d4-0003-4aaa-8000-000000000003",
+      "id": "7a3d8e30-441e-4c38-99c6-ad4428814105",
       "name": "Extraer Datos WhatsApp"
     },
     {
@@ -69,15 +69,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        160,
-        224
+        -560,
+        16
       ],
-      "id": "b1a2c3d4-0004-4aaa-8000-000000000004",
+      "id": "f6157686-f166-46e6-a085-7a7c14c7f603",
       "name": "Buscar Sesion",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -88,10 +88,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        432,
-        224
+        -288,
+        16
       ],
-      "id": "b1a2c3d4-0005-4aaa-8000-000000000005",
+      "id": "9e625f4c-7807-40a3-827a-93e22a08d706",
       "name": "Procesar Registro"
     },
     {
@@ -124,15 +124,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        704,
-        224
+        -16,
+        16
       ],
-      "id": "b1a2c3d4-0006-4aaa-8000-000000000006",
+      "id": "969d743c-cf50-47a8-ba9b-6d99b9c9ca54",
       "name": "Actualizar Sesion",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -162,10 +162,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        976,
-        224
+        272,
+        16
       ],
-      "id": "b1a2c3d4-0007-4aaa-8000-000000000007",
+      "id": "bba3fd0c-fa3d-4f2c-ad99-5e80b107d46b",
       "name": "Registro Completo?"
     },
     {
@@ -198,15 +198,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1248,
-        96
+        544,
+        -128
       ],
-      "id": "b1a2c3d4-0008-4aaa-8000-000000000008",
+      "id": "452de041-7880-49a7-9411-d5e5a90dba95",
       "name": "Guardar Estudiante",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "dlZm8JgcwMf1mXt5",
-          "name": "Google Sheets account"
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
         }
       }
     },
@@ -221,11 +221,57 @@
       "type": "n8n-nodes-base.twilio",
       "typeVersion": 1,
       "position": [
-        1248,
-        352
+        544,
+        144
       ],
-      "id": "b1a2c3d4-0009-4aaa-8000-000000000009",
-      "name": "Enviar Mensaje WhatsApp"
+      "id": "03f3fa92-a412-4f4f-ac40-cd66ffb5ac3b",
+      "name": "Enviar Mensaje WhatsApp",
+      "credentials": {
+        "twilioApi": {
+          "id": "y77sTKUGd8m3qMAU",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        192
+      ],
+      "id": "3f2acf2a-50ad-4654-8dd3-dff47596be67",
+      "name": "Prueba Manual"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "37550e60-4e93-46f7-922a-76224b27047c",
+              "name": "body.Body",
+              "value": "Hola",
+              "type": "string"
+            },
+            {
+              "id": "6a788012-d4a5-4d1e-8159-3ed8990e1543",
+              "name": "body.From",
+              "value": "573009998888",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -880,
+        192
+      ],
+      "id": "711aba16-2686-4f1b-bfc2-fedcd5de329c",
+      "name": "Simular Mensaje WhatsApp"
     }
   ],
   "pinData": {},
@@ -318,16 +364,39 @@
           }
         ]
       ]
+    },
+    "Prueba Manual": {
+      "main": [
+        [
+          {
+            "node": "Simular Mensaje WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simular Mensaje WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Extraer Datos WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": false
+    "executionOrder": "v1"
   },
+  "versionId": "25b6d504-bce4-4fcd-a018-b427b2b60867",
   "meta": {
-    "instanceId": "489454830b805717743ac4c8538048d101d7e28dd0d41eae12050f20151ec3b0"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
   },
+  "id": "XMBl5LdPiCaf2sQh",
   "tags": []
 }
