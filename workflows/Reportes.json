@@ -1,0 +1,218 @@
+{
+  "name": "Reportes_Discord",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -144
+      ],
+      "id": "1d0f02e5-3ee6-4161-8b19-0ca68ddf6b37",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Tutorias",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        64,
+        -144
+      ],
+      "id": "90f6b854-b9bf-453c-a467-0f220d2092a5",
+      "name": "Descargar Tutorias",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Tutores",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        64,
+        32
+      ],
+      "id": "cd3fd179-f848-405f-8f83-be83ac88bba9",
+      "name": "Descargar Tutores",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Estudiantes",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        64,
+        192
+      ],
+      "id": "f6bbe345-2c9e-4bdf-a60c-fa1462004d65",
+      "name": "Descargar Estudiantes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const tutorias = $('Descargar Tutorias').all().map(i => i.json);\nconst tutores = $('Descargar Tutores').all().map(i => i.json);\nlet totalEstudiantes = 0;\ntry { totalEstudiantes = $('Descargar Estudiantes').all().length; } catch(e) { totalEstudiantes = 0; }\n\nconst totalTutorias = tutorias.length;\nconst porEstado = {};\ntutorias.forEach(t => {\n  const e = (t.estado || 'Sin estado').trim();\n  porEstado[e] = (porEstado[e] || 0) + 1;\n});\n\nconst porMateria = {};\ntutorias.forEach(t => {\n  const m = (t.materia || 'Sin materia').trim();\n  porMateria[m] = (porMateria[m] || 0) + 1;\n});\n\nconst conteoTutor = {};\ntutorias.forEach(t => {\n  const id = t.id_tutor;\n  if (id) conteoTutor[id] = (conteoTutor[id] || 0) + 1;\n});\nconst tutoresMap = {};\ntutores.forEach(t => { tutoresMap[t.id_tutor] = t.nombre; });\n\nlet tutorTop = null, maxCount = 0;\nfor (const [id, count] of Object.entries(conteoTutor)) {\n  if (count > maxCount) { maxCount = count; tutorTop = id; }\n}\n\nconst tutoresActivos = tutores.filter(t => (t.estado||'').trim().toLowerCase() === 'activo').length;\n\nlet msg = '📊 *Reporte de Actividad — TutorBot*\\n\\n';\nmsg += `📌 Total de tutorías registradas: *${totalTutorias}*\\n`;\nmsg += `👨‍🏫 Tutores activos: *${tutoresActivos}* de ${tutores.length}\\n`;\nmsg += `🎓 Estudiantes registrados: *${totalEstudiantes}*\\n\\n`;\n\nmsg += '*Tutorías por estado:*\\n';\nfor (const [estado, count] of Object.entries(porEstado)) {\n  msg += `  • ${estado}: ${count}\\n`;\n}\n\nmsg += '\\n*Tutorías por materia:*\\n';\nfor (const [materia, count] of Object.entries(porMateria)) {\n  msg += `  • ${materia}: ${count}\\n`;\n}\n\nif (tutorTop) {\n  msg += `\\n🏆 Tutor más activo: *${tutoresMap[tutorTop] || tutorTop}* (${maxCount} tutorías)\\n`;\n}\n\nmsg += `\\n🗓️ Generado el ${new Date().toISOString().slice(0,10)}`;\n\nreturn [{ json: { reporte: msg } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        304,
+        32
+      ],
+      "id": "9504220e-4822-44aa-a9cd-4db9d866097f",
+      "name": "Generar Reporte"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1527085786195951738",
+          "mode": "list",
+          "cachedResultName": "Servidor n8n"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1527085834111680624",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "content": "={{ $json.reporte }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        544,
+        32
+      ],
+      "id": "8624c270-36ac-4e46-97d9-d64d171052fc",
+      "name": "Enviar Reporte",
+      "webhookId": "a630a26e-9868-4b06-8cde-f342f0acbb40",
+      "credentials": {
+        "discordBotApi": {
+          "id": "eJ6F1pe39cGzo6JQ",
+          "name": "Discord Bot account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Descargar Tutorias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Tutorias": {
+      "main": [
+        [
+          {
+            "node": "Descargar Tutores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Tutores": {
+      "main": [
+        [
+          {
+            "node": "Descargar Estudiantes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Estudiantes": {
+      "main": [
+        [
+          {
+            "node": "Generar Reporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Reporte": {
+      "main": [
+        [
+          {
+            "node": "Enviar Reporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00b4af28-1d9c-47aa-b1f7-6e7171dd5b4d",
+  "meta": {
+    "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
+  },
+  "id": "54wekKsGlVXqTGAr",
+  "tags": []
+}
