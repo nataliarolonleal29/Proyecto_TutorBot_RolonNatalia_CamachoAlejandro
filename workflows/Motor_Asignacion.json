@@ -3,36 +3,6 @@
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "whatsapp-tutorbot",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1.1,
-      "position": [
-        -5104,
-        -128
-      ],
-      "id": "522aace1-4483-4dc4-b8f3-49cae5c10684",
-      "name": "Twilio Webhook",
-      "webhookId": "405665d9-386f-4d2f-955b-9d71d4455dfa"
-    },
-    {
-      "parameters": {
-        "jsCode": "const body = $json.body || $json;\n// Capturar el mensaje y limpiar el formato del teléfono de Twilio\nconst mensaje = (body.Body || '').toString().trim();\nconst telefono = (body.From || '').toString().replace('whatsapp:', '').trim();\nconst usuarioNombre = body.ProfileName || 'Estudiante';\n\nif (!telefono) {\n  throw new Error('No se detectó un número de teléfono válido.');\n}\n\nreturn [{\n  json: {\n    mensaje,\n    telefono,\n    usuarioNombre\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -4672,
-        -128
-      ],
-      "id": "c178d3f9-1c8c-4d0e-9dd3-0fcf0c20b734",
-      "name": "Extraer Datos WhatsApp"
-    },
-    {
-      "parameters": {
         "documentId": {
           "__rl": true,
           "mode": "id",
@@ -40,26 +10,20 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "SESSIONS",
-          "mode": "name"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "WhatShapp_user",
-              "lookupValue": "={{ $json.telefono }}"
-            }
-          ]
+          "value": 659472881,
+          "mode": "list",
+          "cachedResultName": "Tutores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=659472881"
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -4448,
-        -128
+        -3024,
+        48
       ],
-      "id": "b1658472-e3bb-44f2-a905-7e0b41e44507",
+      "id": "b4c89218-9606-45fb-b198-981ad7febb88",
       "name": "Buscar Sesión Usuario",
       "alwaysOutputData": true,
       "credentials": {
@@ -76,7 +40,7 @@
         "rules": {
           "rules": [
             {
-              "value2": "MENU_PRINCIPAL"
+              "value2": "NUEVO"
             },
             {
               "value2": "MENU_MATERIAS",
@@ -85,56 +49,44 @@
             {
               "value2": "ESPERANDO_CONFIRMACION",
               "output": 2
-            },
-            {
-              "value2": "REGISTRO",
-              "output": 3
-            },
-            {
-              "value2": "CONSULTAR",
-              "output": 4
-            },
-            {
-              "value2": "CANCELAR",
-              "output": 5
             }
           ]
         },
-        "fallbackOutput": 6
+        "fallbackOutput": 0
       },
       "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
       "position": [
-        -4224,
-        -128
+        -2832,
+        16
       ],
-      "id": "c973c0e4-de4e-4bc4-8385-0673565168e9",
+      "id": "20facfb5-a257-4b81-b1e9-11dc978f34f8",
       "name": "Enrutador de Estados"
     },
     {
       "parameters": {
-        "jsCode": "const datosInput = $('Extraer Datos WhatsApp').first().json;\n\nconst saludo = `👋 ¡Hola ${datosInput.usuarioNombre}! Bienvenido a *TutorBot* 🤖\\n\\n`;\nconst menu = `Por favor, selecciona la materia para tu asesoría ingresando el número correspondiente:\\n\\n1️⃣ JavaScript\\n2️⃣ Python\\n3️⃣ Java\\n4️⃣ Bases de Datos\\n5️⃣ HTML y CSS`;\n\nreturn [{\n  json: {\n    telefono: datosInput.telefono,\n    respuesta: saludo + menu,\n    siguiente_pantalla: 'MENU_MATERIAS'\n  }\n}];"
+        "jsCode": "const datosInput = $('Extraer Datos Discord').first().json;\n\nconst saludo = `👋 ¡Hola ${datosInput.usuarioNombre}! Bienvenido a *TutorBot* 🤖\\n\\n`;\nconst menu = `Por favor, selecciona la materia para tu asesoría ingresando el número correspondiente:\\n\\n1️⃣ JavaScript\\n2️⃣ Python\\n3️⃣ Java\\n4️⃣ Bases de Datos\\n5️⃣ HTML y CSS`;\n\nreturn [{\n  json: {\n    telefono: datosInput.telefono,\n    respuesta: saludo + menu,\n    siguiente_pantalla: 'MENU_MATERIAS'\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3952,
-        -352
+        -2560,
+        -224
       ],
-      "id": "b262098f-e959-4f3e-a45b-48514a592613",
+      "id": "6dfcd931-596d-4a2e-9c23-7eb8d5da0206",
       "name": "Menu Inicial"
     },
     {
       "parameters": {
-        "jsCode": "const msg = $('Extraer Datos WhatsApp').first().json.mensaje;\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\n\nconst materias = {\n  \"1\": \"JavaScript\",\n  \"2\": \"Python\",\n  \"3\": \"Java\",\n  \"4\": \"Bases de Datos\",\n  \"5\": \"HTML y CSS\"\n};\n\nconst materiaSeleccionada = materias[msg];\n\nif (!materiaSeleccionada) {\n  return [{\n    json: {\n      telefono,\n      error: true,\n      respuesta: \"⚠️ Opción no válida. Por favor selecciona un número del 1 al 5 para elegir tu materia.\",\n      siguiente_pantalla: \"MENU_MATERIAS\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    telefono,\n    error: false,\n    materia_seleccionada: materiaSeleccionada,\n    respuesta: `Perfecto 👍\\nSeleccionaste: *${materiaSeleccionada}*\\n\\nBuscando tutores disponibles...`    \n  }\n}];"
+        "jsCode": "// se lee el número (\"1\", \"2\", etc.) que viene directo del nodo de Discord\nconst msg = $('Send message and wait for response').first().json.data.text;\n\nconst telefono = $('Extraer Datos Discord').first().json.telefono;\n\nconst materias = {\n  \"1\": \"JavaScript\",\n  \"2\": \"Python\",\n  \"3\": \"Java\",\n  \"4\": \"Bases de Datos\",\n  \"5\": \"HTML y CSS\"\n};\n\nconst materiaSeleccionada = materias[msg];\n\nif (!materiaSeleccionada) {\n  return [{\n    json: {\n      telefono,\n      error: true,\n      respuesta: \"⚠️ Opción no válida. Por favor selecciona un número del 1 al 5 para elegir tu materia.\",\n      siguiente_pantalla: \"MENU_MATERIAS\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    telefono,\n    error: false,\n    materia_seleccionada: materiaSeleccionada,\n    respuesta: `Perfecto 👍\\nSeleccionaste: *${materiaSeleccionada}*\\n\\nBuscando tutores disponibles...`    \n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3952,
-        -128
+        -2176,
+        -64
       ],
-      "id": "5f72e1d1-6aa1-479c-ab54-e1f1c80aa7a4",
+      "id": "a28d789a-9c13-45b8-9e1b-c266283783ae",
       "name": "Procesar Materia"
     },
     {
@@ -164,10 +116,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -3744,
-        -128
+        -2000,
+        -64
       ],
-      "id": "41d0fe3c-5609-43cf-aa1f-b25ebf7892c6",
+      "id": "7b1c4c0d-b943-45d7-a459-f36f9df98e43",
       "name": "¿Materia Inválida?"
     },
     {
@@ -187,10 +139,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -3520,
-        -112
+        -1776,
+        -48
       ],
-      "id": "7759929c-ef48-4830-8df1-52731957df86",
+      "id": "53249909-f5bd-4ebe-9e8d-4560ea4d197c",
       "name": "Descargar Tutores",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -201,15 +153,15 @@
     },
     {
       "parameters": {
-        "jsCode": "const materia = $('Procesar Materia').first().json.materia_seleccionada;\nreturn items.filter(item => \n  item.json.estado === \"Activo\" && \n  item.json.especialidad_materias === materia\n);"
+        "jsCode": "const materia = $('Procesar Materia').first().json.materia_seleccionada;\nreturn items.filter(item => \n  (item.json.estado_tutor || '').toLowerCase().trim() === \"activo\" && \n  (item.json.especialidad_materias || '').toLowerCase().trim() === (materia || '').toLowerCase().trim()\n);"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3328,
-        -112
+        -1584,
+        -48
       ],
-      "id": "550687c2-762e-4153-ae3f-14cb6a2f9a51",
+      "id": "154c20ae-043a-44d2-8fb5-661fabf34522",
       "name": "Filtrar Tutores"
     },
     {
@@ -229,11 +181,12 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -3120,
-        -112
+        -1376,
+        -48
       ],
-      "id": "e22be6fc-51bc-45f7-a3b7-014b02908390",
+      "id": "68a74535-1c9d-4342-918c-255f593f1d37",
       "name": "Descargar Disponibilidades",
+      "alwaysOutputData": false,
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "QjRFsBqRYDWP5T7B",
@@ -243,15 +196,15 @@
     },
     {
       "parameters": {
-        "jsCode": "const tutoresValidos = $('Filtrar Tutores').all().map(t => t.json.id_tutor);\nreturn items.filter(item => \n  tutoresValidos.includes(item.json.id_tutor) && \n  item.json.estado === \"Libre\"\n);"
+        "jsCode": "const tutoresValidos = $('Filtrar Tutores').all().map(t => t.json.id_tutor);\nreturn items.filter(item => \n  tutoresValidos.includes(item.json.id_tutor) && \n  (item.json.estado || '').toLowerCase().trim() === \"libre\"\n);"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2928,
-        -112
+        -1184,
+        -48
       ],
-      "id": "45d74eb0-fcf2-4e71-bcf3-bd12e0bc3656",
+      "id": "6c85996c-b2d2-47d9-ad26-678cd3d40953",
       "name": "Cruzar Disponibilidad"
     },
     {
@@ -261,10 +214,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2720,
-        -112
+        -928,
+        -96
       ],
-      "id": "075fbb5a-5809-44db-91d0-4d6990920e6a",
+      "id": "f6e62c90-5105-4de7-b219-238d4d34a866",
       "name": "Motor de Asignación"
     },
     {
@@ -272,7 +225,9 @@
         "conditions": {
           "options": {
             "caseSensitive": true,
-            "leftValueString": ""
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
           },
           "conditions": [
             {
@@ -292,36 +247,36 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2512,
-        -208
+        -752,
+        -240
       ],
-      "id": "5abbb600-24e3-4c0b-ae54-1e4ac63a62df",
+      "id": "892de16c-942b-4c84-a0d0-6ca2a8faa1e7",
       "name": "¿Hay Opciones?"
     },
     {
       "parameters": {
-        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: \"😔 Lo siento, en este momento no tenemos tutores disponibles para la materia solicitada. Por favor, intenta más tarde escribiendo *Hola*.\",\n    siguiente_pantalla: \"NUEVO\"\n  }\n}];"
+        "jsCode": "const telefono = $('Extraer Datos Discord').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: \"😔 Lo siento, en este momento no tenemos tutores disponibles para la materia solicitada. Por favor, intenta más tarde escribiendo *Hola*.\",\n    siguiente_pantalla: \"NUEVO\"\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2304,
-        -208
+        -528,
+        -288
       ],
-      "id": "0b6f2ae9-4e5e-4f36-9797-9a8d72e6b042",
+      "id": "9835c45e-a903-43ce-a5cd-716edd837e02",
       "name": "Handler Sin Tutores"
     },
     {
       "parameters": {
-        "jsCode": "const opciones = items.map(i => i.json);\nconst materia = $('Procesar Materia').first().json.materia_seleccionada;\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\n\nlet msg = `👨‍🏫 *Opciones de asesoría para ${materia}:*\\n\\n`;\n\nopciones.forEach(op => {\n  msg += `*${op.opcion}*️⃣ ${op.nombre_tutor}\\n📅 ${op.fecha} (${op.dia_semana})\\n⏰ ${op.hora_inicio} a ${op.hora_fin}\\n\\n`;\n});\n\nmsg += \"✍️ Responde con el *número* de la opción que desees agendar.\";\n\nreturn [{\n  json: {\n    telefono,\n    respuesta: msg,\n    siguiente_pantalla: \"ESPERANDO_CONFIRMACION\"\n  }\n}];"
+        "jsCode": "const opciones = items.map(i => i.json);\nconst materia = $('Procesar Materia').first().json.materia_seleccionada;\nconst telefono = $('Extraer Datos Discord').first().json.telefono;\n\nlet msg = `👨‍🏫 *Opciones de asesoría para ${materia}:*\\n\\n`;\n\nopciones.forEach(op => {\n  msg += `${op.opcion} ${op.nombre_tutor}\\n📅 ${op.fecha} (${op.dia_semana})\\n⏰ ${op.hora_inicio} a ${op.hora_fin}\\n\\n`;\n});\n\nmsg += \"✍️ Responde con el número de la opción que desees agendar.\";\n\nreturn [{\n  json: {\n    telefono,\n    respuesta: msg,\n    siguiente_pantalla: \"ESPERANDO_CONFIRMACION\"\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2320,
-        16
+        -528,
+        -112
       ],
-      "id": "41bf2b04-30f2-4c6f-b1b5-dba21d40734f",
+      "id": "bf86525a-a55a-417c-924f-31a1d8b56685",
       "name": "Construir Menú Opciones"
     },
     {
@@ -340,7 +295,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id_chat": "={{ $('Extraer Datos WhatsApp').first().json.telefono }}",
+            "id_chat": "={{ $('Extraer Datos Discord').first().json.telefono }}",
             "opcion": "={{ $json.opcion }}",
             "id_tutor": "={{ $json.id_tutor }}",
             "nombre_tutor": "={{ $json.nombre_tutor }}",
@@ -352,17 +307,110 @@
             "fecha_creacion": "={{ new Date().toISOString() }}"
           },
           "matchingColumns": [],
-          "schema": []
+          "schema": [
+            {
+              "id": "id_chat",
+              "displayName": "id_chat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "opcion",
+              "displayName": "opcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre_tutor",
+              "displayName": "nombre_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "materia",
+              "displayName": "materia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora_inicio",
+              "displayName": "hora_inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora_fin",
+              "displayName": "hora_fin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha_creacion",
+              "displayName": "fecha_creacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -2528,
-        80
+        -672,
+        192
       ],
-      "id": "1cd5ed4a-bb3a-4e24-b234-e2c6d64459a7",
+      "id": "3047b6c9-3695-485f-9fc0-000f06e4218d",
       "name": "Almacenar Pre-Reservas",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -388,10 +436,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -3968,
-        176
+        128,
+        96
       ],
-      "id": "50287bb8-97dd-4520-996e-c5cf3af5063d",
+      "id": "f756d665-cd89-4ead-8637-66cecf921f9b",
       "name": "Cargar Opciones Ofrecidas",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -402,15 +450,15 @@
     },
     {
       "parameters": {
-        "jsCode": "const msg = $('Extraer Datos WhatsApp').first().json.mensaje.trim();\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\n\nconst seleccion = parseInt(msg, 10);\nconst pendientes = items.map(i => i.json);\n\nconst reservaElegida = pendientes.find(r => \n  r.id_chat === telefono && \n  parseInt(r.opcion, 10) === seleccion && \n  r.estado === \"Pendiente\"\n);\n\nif (!reservaElegida) {\n  return [{\n    json: {\n      telefono,\n      error: true,\n      respuesta: \"⚠️ Selección inválida. Responde únicamente con el número de la opción elegida (1, 2 o 3).\",\n      siguiente_pantalla: \"ESPERANDO_CONFIRMACION\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    ...reservaElegida,\n    error: false\n  }\n}];"
+        "jsCode": "const msg = $('Send message and wait for response1').first().json.data.text.trim();\nconst telefono = $('Extraer Datos Discord').first().json.telefono;\n\nconst seleccion = parseInt(msg, 10);\nconst pendientes = items.map(i => i.json);\n\nconst reservaElegida = pendientes.find(r => \n  r.id_chat === telefono && \n  parseInt(r.opcion, 10) === seleccion && \n  r.estado === \"Pendiente\"\n);\n\nif (!reservaElegida) {\n  return [{\n    json: {\n      telefono,\n      error: true,\n      respuesta: \"⚠️ Selección inválida. Responde únicamente con el número de la opción elegida (1, 2 o 3).\",\n      siguiente_pantalla: \"ESPERANDO_CONFIRMACION\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    ...reservaElegida,\n    error: false\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3744,
-        176
+        352,
+        96
       ],
-      "id": "13cd9c26-8eba-4be7-8fc9-23910aac4a70",
+      "id": "7eb64a0c-b715-4a91-acf8-e6a790eb944d",
       "name": "Validar Selección"
     },
     {
@@ -438,10 +486,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -3520,
-        176
+        576,
+        96
       ],
-      "id": "3e615b9a-242f-4b71-ba99-6a14706967ba",
+      "id": "fbbe2cf0-e016-4c38-a471-93215287569c",
       "name": "¿Selección Inválida?"
     },
     {
@@ -449,19 +497,20 @@
         "calendar": {
           "__rl": true,
           "value": "alexc6997@gmail.com",
-          "mode": "list"
+          "mode": "list",
+          "cachedResultName": "alexc6997@gmail.com"
         },
-        "start": "={{ $json.fecha + 'T' + $json.hora_inicio + ':00-05:00' }}",
-        "end": "={{ $json.fecha + 'T' + $json.hora_fin + ':00-05:00' }}",
+        "start": "={{ $json.fecha + 'T' + $json.hora_inicio.padStart(5,'0') + ':00-05:00' }}",
+        "end": "={{ $json.fecha + 'T' + $json.hora_fin.padStart(5,'0') + ':00-05:00' }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1.3,
       "position": [
-        -3296,
-        192
+        800,
+        112
       ],
-      "id": "38cf7489-8167-4cc7-8cdf-4b3bd41952a6",
+      "id": "d3244a4c-1b3e-4d5d-8d5e-b226cf6d6c3d",
       "name": "Agendar Google Calendar",
       "alwaysOutputData": true,
       "credentials": {
@@ -490,7 +539,7 @@
             "id_tutor": "={{ $('Validar Selección').first().json.id_tutor }}",
             "dia_semana": "={{ $('Validar Selección').first().json.dia_semana }}",
             "hora_inicio": "={{ $('Validar Selección').first().json.hora_inicio }}",
-            "estado": "Ocupado",
+            "estado": "ocupado",
             "row_number": 0
           },
           "matchingColumns": [
@@ -595,10 +644,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -3088,
-        192
+        1008,
+        112
       ],
-      "id": "b672cad5-3a26-410d-beed-8ae1e80ae022",
+      "id": "09003581-9471-49c5-9e46-3e9ec424edcb",
       "name": "Cerrar Disponibilidad",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -625,528 +674,31 @@
           "value": {
             "id_chat": "={{ $('Validar Selección').first().json.id_chat }}",
             "opcion": "={{ $('Validar Selección').first().json.opcion }}",
-            "estado": "Confirmada"
+            "estado": "Confirmada",
+            "row_number": 0
           },
           "matchingColumns": [
             "id_chat",
             "opcion"
           ],
-          "schema": []
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -2880,
-        192
-      ],
-      "id": "d8617e51-d267-4f9d-acd7-7ceace548570",
-      "name": "Confirmar Asesoría",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const r = $('Validar Selección').first().json;\n\nlet msg = \"✅ *¡TU ASESORÍA HA SIDO CONFIRMADA!* 🗓️\\n\\n\";\nmsg += `👩‍🏫 *Tutor:* ${r.nombre_tutor}\\n`;\nmsg += `📚 *Materia:* ${r.materia}\\n`;\nmsg += `📅 *Fecha:* ${r.fecha} (${r.dia_semana})\\n`;\nmsg += `🕗 *Hora:* ${r.hora_inicio} - ${r.hora_fin}\\n\\n`;\nmsg += \"Hemos añadido este evento a la agenda. ¡Te esperamos!\";\n\nreturn [{\n  json: {\n    telefono: r.id_chat,\n    respuesta: msg,\n    siguiente_pantalla: \"NUEVO\"\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -2688,
-        192
-      ],
-      "id": "0aa4c79f-cf4c-48b2-bcea-8a0fccbdeef5",
-      "name": "Mensaje de Éxito"
-    },
-    {
-      "parameters": {
-        "mode": "combine",
-        "combineBy": "combineByPosition",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        -1888,
-        -64
-      ],
-      "id": "349b1063-d1af-4047-909d-1b92ea590b77",
-      "name": "Merge Salidas"
-    },
-    {
-      "parameters": {
-        "operation": "upsert",
-        "documentId": {
-          "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
-          "mode": "id"
-        }
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -1696,
-        -64
-      ],
-      "id": "d8809a65-fe31-429c-a05b-67ac2338d216",
-      "name": "Guardar Estado DB",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "from": "+14155238886",
-        "to": "={{ $json.telefono }}",
-        "toWhatsapp": true,
-        "message": "={{ $json.respuesta }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.twilio",
-      "typeVersion": 1,
-      "position": [
-        -1504,
-        -64
-      ],
-      "id": "58f8da27-18d6-4e53-9b2e-6716a116c3fa",
-      "name": "Twilio WhatsApp Unificado",
-      "credentials": {
-        "twilioApi": {
-          "id": "y77sTKUGd8m3qMAU",
-          "name": "Twilio account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"body\": {\n    \"Body\": \"Hola\",\n    \"From\": \"whatsapp:+573016218473\",\n    \"ProfileName\": \"Estudiante prueba\"\n  }\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -4896,
-        -128
-      ],
-      "id": "5b8e7b25-acc4-462d-9295-09af0fbf0584",
-      "name": "Edit Fields",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "jsCode": "const datosInput = $('Extraer Datos WhatsApp').first().json;\n\nconst saludo = `👋 ¡Hola ${datosInput.usuarioNombre}! Bienvenido a *TutorBot* 🤖\\n\\n`;\nconst menu = `¿Qué deseas hacer? Responde con el número:\\n\\n1️⃣ Solicitar una tutoría\\n2️⃣ Registrarme como estudiante\\n3️⃣ Consultar una tutoría\\n4️⃣ Cancelar una tutoría`;\n\nreturn [{\n  json: {\n    telefono: datosInput.telefono,\n    respuesta: saludo + menu,\n    siguiente_pantalla: 'MENU_PRINCIPAL'\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -4224,
-        -528
-      ],
-      "id": "1e729217-9344-42fb-a665-9d079d72439d",
-      "name": "Menu Principal"
-    },
-    {
-      "parameters": {
-        "dataType": "string",
-        "value1": "={{ ($('Extraer Datos WhatsApp').first().json.mensaje || '').trim() }}",
-        "rules": {
-          "rules": [
-            {
-              "value2": "1"
-            },
-            {
-              "value2": "2",
-              "output": 1
-            },
-            {
-              "value2": "3",
-              "output": 2
-            },
-            {
-              "value2": "4",
-              "output": 3
-            }
-          ]
-        },
-        "fallbackOutput": 4
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 1,
-      "position": [
-        -3952,
-        -528
-      ],
-      "id": "6767960b-b988-4736-a7e1-eaef205bde04",
-      "name": "Switch Menu Principal"
-    },
-    {
-      "parameters": {
-        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nconst mensaje = ($('Extraer Datos WhatsApp').first().json.mensaje || '').trim();\nconst mensajeLower = mensaje.toLowerCase();\n\nconst sesionRows = $('Buscar Sesión Usuario').all();\nconst sesionExistente = sesionRows.length > 0 ? sesionRows[0].json : null;\n\nlet paso = (sesionExistente && sesionExistente.pantalla_actual === 'REGISTRO')\n  ? parseInt(sesionExistente.paso_actual, 10)\n  : 0;\nif (isNaN(paso)) paso = 0;\n\nlet datos = {};\ntry {\n  datos = (sesionExistente && sesionExistente.pantalla_actual === 'REGISTRO' && sesionExistente.datos_parciales)\n    ? JSON.parse(sesionExistente.datos_parciales)\n    : {};\n} catch (e) {\n  datos = {};\n}\n\nlet respuesta = '';\nlet nuevoPaso = paso;\nlet pantalla = 'REGISTRO';\nlet completado = false;\n\nif (paso === 0) {\n  nuevoPaso = 1;\n  respuesta = '📝 ¡Vamos a registrarte!\\n\\nPor favor escribe tu nombre completo:';\n  datos = {};\n}\nelse if (paso === 1) {\n  datos.nombre = mensaje;\n  nuevoPaso = 2;\n  respuesta = `Gracias, ${datos.nombre} 😊\\n\\nAhora escribe tu número de documento de identidad:`;\n}\nelse if (paso === 2) {\n  datos.documento = mensaje;\n  nuevoPaso = 3;\n  respuesta = 'Perfecto ✅\\n\\n¿Qué materia te interesa?\\n\\n1️⃣ JavaScript\\n2️⃣ Python\\n3️⃣ Java\\n4️⃣ Bases de Datos\\n5️⃣ HTML y CSS';\n}\nelse if (paso === 3) {\n  const materias = {'1':'JavaScript','2':'Python','3':'Java','4':'Bases de Datos','5':'HTML y CSS'};\n  const materiaElegida = materias[mensaje];\n  if (!materiaElegida) {\n    nuevoPaso = 3;\n    respuesta = 'No reconocí esa opción 😅\\n\\nResponde con un número del 1 al 5.';\n  } else {\n    datos.materia = materiaElegida;\n    nuevoPaso = 4;\n    respuesta = `Confirma tus datos 📋\\n\\n👤 Nombre: ${datos.nombre}\\n🪦 Documento: ${datos.documento}\\n📚 Materia: ${datos.materia}\\n\\n¿Es correcto? Responde SI o NO`;\n  }\n}\nelse if (paso === 4) {\n  if (mensajeLower === 'si' || mensajeLower === 'sí') {\n    completado = true;\n    nuevoPaso = 0;\n    pantalla = 'NUEVO';\n    respuesta = `🎉 ¡Registro completado, ${datos.nombre}!\\n\\nEscribe *menu* para ver las opciones disponibles.`;\n  } else if (mensajeLower === 'no') {\n    nuevoPaso = 1;\n    datos = {};\n    respuesta = 'Sin problema, empecemos de nuevo 🔄\\n\\nEscribe tu nombre completo:';\n  } else {\n    nuevoPaso = 4;\n    respuesta = 'Por favor responde solo SI o NO 🙏';\n  }\n}\n\nreturn [{\n  json: {\n    telefono,\n    respuesta,\n    siguiente_pantalla: pantalla,\n    paso_actual: nuevoPaso,\n    datos_parciales: JSON.stringify(datos),\n    completado,\n    id_estudiante: completado ? telefono : null,\n    nombre_estudiante: completado ? datos.nombre : null,\n    documento: completado ? datos.documento : null,\n    materia_interes: completado ? datos.materia : null,\n    fecha_registro: completado ? new Date().toISOString().slice(0,10) : null\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -3520,
-        -736
-      ],
-      "id": "8b6978d9-78ab-4651-98a6-a53c05f29252",
-      "name": "Procesar Registro"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict"
-          },
-          "conditions": [
-            {
-              "id": "check-completado-registro",
-              "leftValue": "={{ $json.completado }}",
-              "rightValue": true,
-              "operator": {
-                "type": "boolean",
-                "operation": "true"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        -3296,
-        -736
-      ],
-      "id": "a3445f60-0458-4c8a-97a2-fae8085608e7",
-      "name": "¿Registro Completo?"
-    },
-    {
-      "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "ESTUDIANTES",
-          "mode": "list",
-          "cachedResultName": "ESTUDIANTES"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "id_estudiante": "={{ $json.id_estudiante }}",
-            "nombre": "={{ $json.nombre_estudiante }}",
-            "documento": "={{ $json.documento }}",
-            "telefono": "={{ $json.telefono }}",
-            "materia_interes": "={{ $json.materia_interes }}",
-            "fecha_registro": "={{ $json.fecha_registro }}"
-          },
-          "matchingColumns": []
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -3072,
-        -816
-      ],
-      "id": "cdcdd4b3-3b2e-4b90-a02f-fe4e5d8d1c16",
-      "name": "Guardar Estudiante"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.4,
-      "position": [
-        -5104,
-        -288
-      ],
-      "id": "69270f98-8313-4f69-9a24-f15ef1522b42",
-      "name": "Respond to Webhook"
-    },
-    {
-      "parameters": {
-        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: '🔍 Escribe el ID de la tutoría que deseas consultar (ejemplo: TU001):',\n    siguiente_pantalla: 'CONSULTAR'\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -3952,
-        -896
-      ],
-      "id": "3573a01a-69e8-4872-920b-db9d1aa1f102",
-      "name": "Pedir ID Consulta"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "Tutorias",
-          "mode": "name"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "id_tutoria",
-              "lookupValue": "={{ $('Extraer Datos WhatsApp').first().json.mensaje.trim() }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -3520,
-        -896
-      ],
-      "id": "cc9d6acc-f87c-49c2-b3e7-b47d84745d64",
-      "name": "Buscar Tutoria (Consultar)",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "chk-consulta",
-              "leftValue": "={{ $json.id_tutoria }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -3296,
-        -896
-      ],
-      "id": "c11dda43-a1c1-444f-9c9b-2fa7adac93f6",
-      "name": "¿Tutoria Encontrada? (Consultar)"
-    },
-    {
-      "parameters": {
-        "jsCode": "const r = $json;\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nlet msg = '✅ *Tutoría encontrada:*\\n\\n';\nmsg += `🆔 ID: ${r.id_tutoria}\\n`;\nmsg += `📚 Materia: ${r.materia}\\n`;\nmsg += `📅 Fecha: ${r.fecha}\\n`;\nmsg += `🕗 Hora: ${r.hora}\\n`;\nmsg += `📌 Estado: ${r.estado}\\n\\n`;\nmsg += 'Escribe *menu* para volver al inicio.';\nreturn [{ json: { telefono, respuesta: msg, siguiente_pantalla: 'NUEVO' } }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -3072,
-        -976
-      ],
-      "id": "891d1dba-3c2b-43a8-a167-755944b4e4c7",
-      "name": "Respuesta Consulta OK"
-    },
-    {
-      "parameters": {
-        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: '⚠️ Tutoría no encontrada. Verifica el ID e intenta de nuevo, o escribe *menu* para volver al inicio.',\n    siguiente_pantalla: 'NUEVO'\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -3072,
-        -816
-      ],
-      "id": "e17a52cc-87ec-4e7a-9aae-8be5b29c3f29",
-      "name": "Respuesta Consulta Error"
-    },
-    {
-      "parameters": {
-        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: '❌ Escribe el ID de la tutoría que deseas cancelar (ejemplo: TU001):',\n    siguiente_pantalla: 'CANCELAR'\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -3952,
-        -1056
-      ],
-      "id": "0d0d9340-2a3e-4c16-98ed-b89f13727b89",
-      "name": "Pedir ID Cancelar"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "Tutorias",
-          "mode": "name"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "id_tutoria",
-              "lookupValue": "={{ $('Extraer Datos WhatsApp').first().json.mensaje.trim() }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -3520,
-        -1056
-      ],
-      "id": "73d36042-2d20-4939-9505-21e776caf8f3",
-      "name": "Buscar Tutoria (Cancelar)",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "chk-cancelar",
-              "leftValue": "={{ $json.id_tutoria }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -3296,
-        -1056
-      ],
-      "id": "aea8a0e1-8862-4101-8b70-9471056361cb",
-      "name": "¿Tutoria Encontrada? (Cancelar)"
-    },
-    {
-      "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "Tutorias",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "id_tutoria": "={{ $json.id_tutoria }}",
-            "estado": "Cancelada"
-          },
-          "matchingColumns": [
-            "id_tutoria"
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -3072,
-        -1136
-      ],
-      "id": "ab7e4630-d2a8-4c08-be66-4a92092db455",
-      "name": "Actualizar Estado Tutoria",
-      "alwaysOutputData": true
-    },
-    {
-      "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "Disponibilidad",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "id_tutor": "={{ $('Buscar Tutoria (Cancelar)').first().json.id_tutor }}",
-            "estado": "Libre",
-            "row_number": 0
-          },
-          "matchingColumns": [
-            "id_tutor"
-          ],
           "schema": [
             {
-              "id": "id_dispo",
-              "displayName": "id_dispo",
+              "id": "id_chat",
+              "displayName": "id_chat",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "opcion",
+              "displayName": "opcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             },
             {
               "id": "id_tutor",
@@ -1155,11 +707,22 @@
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
-              "id": "nombre",
-              "displayName": "nombre",
+              "id": "nombre_tutor",
+              "displayName": "nombre_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "materia",
+              "displayName": "materia",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -1170,16 +733,6 @@
             {
               "id": "fecha",
               "displayName": "fecha",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "dia_semana",
-              "displayName": "dia_semana",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -1217,6 +770,16 @@
               "canBeUsedToMatch": true
             },
             {
+              "id": "fecha_creacion",
+              "displayName": "fecha_creacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
               "id": "row_number",
               "displayName": "row_number",
               "required": false,
@@ -1236,12 +799,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -2864,
-        -1136
+        1216,
+        112
       ],
-      "id": "01bac7f5-0a25-4d11-831b-b987a5f07c20",
-      "name": "Liberar Horario Tutor",
-      "alwaysOutputData": true,
+      "id": "8f08f737-f87e-4541-b7c0-32adc695826c",
+      "name": "Confirmar Asesoría",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "QjRFsBqRYDWP5T7B",
@@ -1251,60 +813,222 @@
     },
     {
       "parameters": {
-        "jsCode": "const r = $('Buscar Tutoria (Cancelar)').first().json;\nconst telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{ json: { telefono, respuesta: `✅ Tu tutoría (ID: ${r.id_tutoria}) fue cancelada correctamente.\\n\\nEscribe *menu* para volver al inicio.`, siguiente_pantalla: 'NUEVO' } }];"
+        "jsCode": "const r = $('Validar Selección').first().json;\n\nlet msg = \"✅ *¡TU ASESORÍA HA SIDO CONFIRMADA!* 🗓️\\n\\n\";\nmsg += `👩‍🏫 *Tutor:* ${r.nombre_tutor}\\n`;\nmsg += `📚 *Materia:* ${r.materia}\\n`;\nmsg += `📅 *Fecha:* ${r.fecha}\\n`;\nmsg += `🕗 *Hora:* ${r.hora_inicio} - ${r.hora_fin}\\n\\n`;\nmsg += \"Hemos añadido este evento a la agenda. ¡Te esperamos!\";\n\nreturn [{\n  json: {\n    telefono: r.id_chat,\n    respuesta: msg,\n    siguiente_pantalla: \"NUEVO\"\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2656,
-        -1136
+        1408,
+        112
       ],
-      "id": "869afdfb-d5c0-41ee-a7f5-9a5f803110fe",
-      "name": "Respuesta Cancelar OK"
+      "id": "dcbc4a4e-ba03-42c2-a442-14498ae5caa0",
+      "name": "Mensaje de Éxito"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -304,
+        96
+      ],
+      "id": "4ae13993-f2b8-47ac-af4f-f4c5e7df4249",
+      "name": "Merge Salidas"
     },
     {
       "parameters": {
-        "jsCode": "const telefono = $('Extraer Datos WhatsApp').first().json.telefono;\nreturn [{\n  json: {\n    telefono,\n    respuesta: '⚠️ Tutoría no encontrada. Verifica el ID e intenta de nuevo, o escribe *menu* para volver al inicio.',\n    siguiente_pantalla: 'NUEVO'\n  }\n}];"
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 782939407,
+          "mode": "list",
+          "cachedResultName": "Sessions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=782939407"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Sessions": "={{ $('Extraer Datos Discord').first().json.telefono }}"
+          },
+          "matchingColumns": [
+            "Sessions"
+          ],
+          "schema": [
+            {
+              "id": "Sessions",
+              "displayName": "Sessions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1808,
+        32
+      ],
+      "id": "2b64d956-fed1-4bec-9afb-69d800ee7d40",
+      "name": "Guardar Estado DB",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1461025112445812879\n// Captura los datos del trigger manual\nconst body = $json;\n\nconst ID_DISCORD = '1461025112445812879'; \n\nconst mensaje = 'hola';\n\nconst telefono = ID_DISCORD; \n\nconst usuarioNombre = 'Natalia'; \n\nreturn [{\n  json: {\n    mensaje,\n    telefono,\n    usuarioNombre\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3072,
-        -1136
+        -3232,
+        48
       ],
-      "id": "fcc68b6d-094c-445b-9bf6-92a68949a919",
-      "name": "Respuesta Cancelar Error"
+      "id": "859ac270-1b32-4b8a-9b46-4f24dc540c50",
+      "name": "Extraer Datos Discord"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendAndWait",
+        "guildId": {
+          "__rl": true,
+          "value": "1527085786195951738",
+          "mode": "list",
+          "cachedResultName": "Servidor n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1527085834111680624",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
+        },
+        "message": "={{ $json.respuesta }}",
+        "responseType": "freeText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        -2368,
+        -224
+      ],
+      "id": "85b7787b-8d91-4c92-93a4-d22d621b4c8e",
+      "name": "Send message and wait for response",
+      "webhookId": "218e66dd-7cae-4773-870f-5202d1928a31",
+      "credentials": {
+        "discordBotApi": {
+          "id": "eJ6F1pe39cGzo6JQ",
+          "name": "Discord Bot account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3440,
+        48
+      ],
+      "id": "9bcb6aa9-0904-4763-a04a-c1962bd06699",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendAndWait",
+        "guildId": {
+          "__rl": true,
+          "value": "1527085786195951738",
+          "mode": "list",
+          "cachedResultName": "Servidor n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1527085834111680624",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
+        },
+        "message": "={{ $json.respuesta }}",
+        "responseType": "freeText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        96
+      ],
+      "id": "134554c9-ea8f-4b2b-a8a6-6e86b67aae55",
+      "name": "Send message and wait for response1",
+      "webhookId": "218e66dd-7cae-4773-870f-5202d1928a31",
+      "credentials": {
+        "discordBotApi": {
+          "id": "eJ6F1pe39cGzo6JQ",
+          "name": "Discord Bot account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1527085786195951738",
+          "mode": "list",
+          "cachedResultName": "Servidor n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1527085834111680624",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
+        },
+        "content": "={{ $json.respuesta }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1616,
+        32
+      ],
+      "id": "d8c48e76-a2d3-4663-815b-31b6c137e527",
+      "name": "Send a message",
+      "webhookId": "b615d0e9-99a7-4308-85c9-a1c865581d39",
+      "credentials": {
+        "discordBotApi": {
+          "id": "eJ6F1pe39cGzo6JQ",
+          "name": "Discord Bot account 2"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
-    "Twilio Webhook": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Extraer Datos WhatsApp",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extraer Datos WhatsApp": {
-      "main": [
-        [
-          {
-            "node": "Buscar Sesión Usuario",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Buscar Sesión Usuario": {
       "main": [
         [
@@ -1320,28 +1044,7 @@
       "main": [
         [
           {
-            "node": "Switch Menu Principal",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Procesar Materia",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Cargar Opciones Ofrecidas",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Procesar Registro",
+            "node": "Menu Inicial",
             "type": "main",
             "index": 0
           }
@@ -1363,7 +1066,7 @@
       "main": [
         [
           {
-            "node": "Merge Salidas",
+            "node": "Send message and wait for response",
             "type": "main",
             "index": 0
           }
@@ -1461,7 +1164,7 @@
           {
             "node": "Merge Salidas",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -1501,13 +1204,7 @@
     },
     "¿Selección Inválida?": {
       "main": [
-        [
-          {
-            "node": "Merge Salidas",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "Agendar Google Calendar",
@@ -1554,7 +1251,7 @@
       "main": [
         [
           {
-            "node": "Merge Salidas",
+            "node": "Send a message",
             "type": "main",
             "index": 0
           }
@@ -1565,29 +1262,7 @@
       "main": [
         [
           {
-            "node": "Guardar Estado DB",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Guardar Estado DB": {
-      "main": [
-        [
-          {
-            "node": "Twilio WhatsApp Unificado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "Extraer Datos WhatsApp",
+            "node": "Send message and wait for response1",
             "type": "main",
             "index": 0
           }
@@ -1598,236 +1273,62 @@
       "main": [
         [
           {
-            "node": "Merge Salidas",
+            "node": "Send message and wait for response",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Switch Menu Principal": {
+    "Extraer Datos Discord": {
       "main": [
         [
           {
-            "node": "Menu Inicial",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Procesar Registro",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Pedir ID Consulta",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Pedir ID Cancelar",
+            "node": "Buscar Sesión Usuario",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Menu Principal": {
+    "Send message and wait for response": {
       "main": [
         [
           {
-            "node": "Merge Salidas",
+            "node": "Procesar Materia",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Procesar Registro": {
+    "When clicking ‘Execute workflow’": {
       "main": [
         [
           {
-            "node": "¿Registro Completo?",
+            "node": "Extraer Datos Discord",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "¿Registro Completo?": {
+    "Send message and wait for response1": {
       "main": [
         [
           {
-            "node": "Guardar Estudiante",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Merge Salidas",
+            "node": "Cargar Opciones Ofrecidas",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Guardar Estudiante": {
+    "Send a message": {
       "main": [
         [
           {
-            "node": "Merge Salidas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Pedir ID Consulta": {
-      "main": [
-        [
-          {
-            "node": "Merge Salidas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Buscar Tutoria (Consultar)": {
-      "main": [
-        [
-          {
-            "node": "¿Tutoria Encontrada? (Consultar)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "¿Tutoria Encontrada? (Consultar)": {
-      "main": [
-        [
-          {
-            "node": "Respuesta Consulta OK",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Respuesta Consulta Error",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Respuesta Consulta OK": {
-      "main": [
-        [
-          {
-            "node": "Merge Salidas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Respuesta Consulta Error": {
-      "main": [
-        [
-          {
-            "node": "Merge Salidas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Pedir ID Cancelar": {
-      "main": [
-        [
-          {
-            "node": "Merge Salidas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Buscar Tutoria (Cancelar)": {
-      "main": [
-        [
-          {
-            "node": "¿Tutoria Encontrada? (Cancelar)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "¿Tutoria Encontrada? (Cancelar)": {
-      "main": [
-        [
-          {
-            "node": "Actualizar Estado Tutoria",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Respuesta Cancelar Error",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Actualizar Estado Tutoria": {
-      "main": [
-        [
-          {
-            "node": "Liberar Horario Tutor",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Liberar Horario Tutor": {
-      "main": [
-        [
-          {
-            "node": "Respuesta Cancelar OK",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Respuesta Cancelar OK": {
-      "main": [
-        [
-          {
-            "node": "Merge Salidas",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Respuesta Cancelar Error": {
-      "main": [
-        [
-          {
-            "node": "Merge Salidas",
+            "node": "Guardar Estado DB",
             "type": "main",
             "index": 0
           }
@@ -1839,11 +1340,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "23105ac3-b4b8-4f78-b962-063041caef7d",
+  "versionId": "7b4afdcd-da03-434b-bf21-c04ba9fc37a7",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
   },
-  "id": "aafcM7Lba2soYTGP",
+  "id": "iNFMAxADkxPKBS2O",
   "tags": []
 }
