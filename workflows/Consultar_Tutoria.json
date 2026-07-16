@@ -1,16 +1,105 @@
 {
-  "name": "Consultar Tutoría",
+  "name": "Consultar_Tutoria_Discord",
   "nodes": [
     {
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -800,
-        320
+        -1120,
+        112
       ],
-      "id": "f96d09f0-c14f-4b07-b112-295b4bd1fc6e",
-      "name": "When clicking ‘Execute workflow’"
+      "id": "8d3ba4c9-edd2-4d4b-a9e3-a3cfd9ea17eb",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "jsCode": "const ID_DISCORD = '1461025112445812879';\nconst telefono = ID_DISCORD;\nconst usuarioNombre = 'Natalia';\nreturn [{ json: { telefono, usuarioNombre } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        112
+      ],
+      "id": "c138d9d3-cf6c-496c-9031-014867e74f12",
+      "name": "Extraer Datos Discord"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendAndWait",
+        "guildId": {
+          "__rl": true,
+          "value": "1527085786195951738",
+          "mode": "list",
+          "cachedResultName": "Servidor n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1527085834111680624",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
+        },
+        "message": "🔍 Escribe el *ID de la tutoría* que deseas consultar (ejemplo: TU001):",
+        "responseType": "freeText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        112
+      ],
+      "id": "96eda9b5-8f14-4aac-882c-75498e237461",
+      "name": "Pedir ID Consulta",
+      "webhookId": "8d06fcc0-7c11-4c76-814f-28b6ff4518de",
+      "credentials": {
+        "discordBotApi": {
+          "id": "eJ6F1pe39cGzo6JQ",
+          "name": "Discord Bot account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Tutorias",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id_tutoria",
+              "lookupValue": "={{ $json.data.text.trim() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -400,
+        112
+      ],
+      "id": "df152446-6aac-4d09-891f-ed295bd61109",
+      "name": "Buscar Tutoria",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QjRFsBqRYDWP5T7B",
+          "name": "Google Sheets account 2"
+        }
+      }
     },
     {
       "parameters": {
@@ -23,7 +112,7 @@
           },
           "conditions": [
             {
-              "id": "c7ef40e9-eb72-4948-ad33-eb5be12cfd42",
+              "id": "c1",
               "leftValue": "={{ $json.id_tutoria }}",
               "rightValue": "",
               "operator": {
@@ -40,115 +129,145 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -320,
-        320
+        -160,
+        112
       ],
-      "id": "fc73c9be-cf8c-4668-8f98-4f22e6c41426",
-      "name": "If"
+      "id": "fc942534-14b3-4cdb-b54f-72d6b91aa161",
+      "name": "¿Tutoria Encontrada?"
     },
     {
       "parameters": {
-        "documentId": {
+        "jsCode": "const r = $json;\nlet msg = '✅ *Tutoría encontrada:*\\n\\n';\nmsg += `🆔 ID: ${r.id_tutoria}\\n📚 Materia: ${r.materia}\\n📅 Fecha: ${r.fecha}\\n🕗 Hora: ${r.hora}\\n📌 Estado: ${r.estado}`;\nreturn [{ json: { mensaje: msg } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        32
+      ],
+      "id": "4d2f8b39-5fb3-4451-bb8e-8b36605877e8",
+      "name": "Respuesta OK"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
           "__rl": true,
-          "value": "1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8",
+          "value": "1527085786195951738",
           "mode": "list",
-          "cachedResultName": "Proyecto n8n Natalia Rolon - Alejandro Camacho",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit?usp=drivesdk"
+          "cachedResultName": "Servidor n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
         },
-        "sheetName": {
+        "channelId": {
           "__rl": true,
-          "value": 639485077,
+          "value": "1527085834111680624",
           "mode": "list",
-          "cachedResultName": "Tutorias",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit#gid=639485077"
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
         },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "id_tutoria",
-              "lookupValue": "TU001"
-            }
-          ]
-        },
+        "content": "={{ $json.mensaje }}",
         "options": {}
       },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
       "position": [
-        -576,
-        320
+        320,
+        32
       ],
-      "id": "44ccc535-c909-4571-b21e-862d273eea5c",
-      "name": "Get row(s) in sheet",
-      "alwaysOutputData": true,
+      "id": "94d7a2e7-a3e9-4664-9887-77ca1452c199",
+      "name": "Enviar Resultado OK",
+      "webhookId": "c3a71e11-0572-48ce-972e-30a283e4ae24",
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+        "discordBotApi": {
+          "id": "eJ6F1pe39cGzo6JQ",
+          "name": "Discord Bot account 2"
         }
       }
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "01c6a974-f617-4d05-9b9c-2ea026338a10",
-              "name": "mensaje",
-              "value": "Tutoría encontrada correctamente.",
-              "type": "string"
-            }
-          ]
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1527085786195951738",
+          "mode": "list",
+          "cachedResultName": "Servidor n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
         },
+        "channelId": {
+          "__rl": true,
+          "value": "1527085834111680624",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
+        },
+        "content": "⚠️ Tutoría no encontrada. Verifica el ID e intenta de nuevo.",
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
       "position": [
-        -112,
-        224
+        80,
+        192
       ],
-      "id": "10775af9-6d2e-4716-82d8-94102636ca37",
-      "name": "Respuesta OK"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "adc1f61c-d48c-4b34-88b8-9f8608a22f4e",
-              "name": "mensaje",
-              "value": "Tutoría no encontrada.",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -112,
-        416
-      ],
-      "id": "72fdeacf-5f63-4b61-a4d6-7d5e28d77a2a",
-      "name": "Respuesta Error"
+      "id": "d297282c-f8ae-4b88-8054-5d40a0a89bf8",
+      "name": "Enviar Resultado Error",
+      "webhookId": "d7c73a64-50ae-4f08-96b5-0773b22dac46",
+      "credentials": {
+        "discordBotApi": {
+          "id": "eJ6F1pe39cGzo6JQ",
+          "name": "Discord Bot account 2"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
-    "When clicking ‘Execute workflow’": {
+    "When clicking 'Execute workflow'": {
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Extraer Datos Discord",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If": {
+    "Extraer Datos Discord": {
+      "main": [
+        [
+          {
+            "node": "Pedir ID Consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedir ID Consulta": {
+      "main": [
+        [
+          {
+            "node": "Buscar Tutoria",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Tutoria": {
+      "main": [
+        [
+          {
+            "node": "¿Tutoria Encontrada?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Tutoria Encontrada?": {
       "main": [
         [
           {
@@ -159,18 +278,18 @@
         ],
         [
           {
-            "node": "Respuesta Error",
+            "node": "Enviar Resultado Error",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get row(s) in sheet": {
+    "Respuesta OK": {
       "main": [
         [
           {
-            "node": "If",
+            "node": "Enviar Resultado OK",
             "type": "main",
             "index": 0
           }
@@ -182,7 +301,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e8eaa4f5-754c-4434-b02b-f5f962b8f766",
+  "versionId": "18c4b797-a91c-4e52-9b74-1667ab3f587f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
