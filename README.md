@@ -169,3 +169,7 @@ TutorBot demuestra cómo **n8n**, **Discord** y **Google Sheets** pueden
 integrarse para automatizar la gestión de tutorías académicas,
 reduciendo tiempos de respuesta y mejorando la administración de la
 información mediante una arquitectura modular y escalable.
+
+# Google Sheets
+Link de la base de datos:
+https://docs.google.com/spreadsheets/d/1uK9h2OehoZZ5dEnooeKckfGbdbzMEoOPdOTX8-nRvD8/edit?usp=sharing
