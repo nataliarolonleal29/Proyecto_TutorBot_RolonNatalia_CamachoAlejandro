@@ -20,16 +20,16 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -3024,
-        48
+        -2496,
+        320
       ],
-      "id": "b4c89218-9606-45fb-b198-981ad7febb88",
+      "id": "89ee79bd-7c3d-4c6b-b2c2-f9c5ee3b7c78",
       "name": "Buscar Sesión Usuario",
       "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -57,10 +57,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
       "position": [
-        -2832,
-        16
+        -2304,
+        288
       ],
-      "id": "20facfb5-a257-4b81-b1e9-11dc978f34f8",
+      "id": "f4118bd0-8532-4b18-a36b-816a99d22f0e",
       "name": "Enrutador de Estados"
     },
     {
@@ -70,10 +70,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2560,
-        -224
+        -2032,
+        64
       ],
-      "id": "6dfcd931-596d-4a2e-9c23-7eb8d5da0206",
+      "id": "c3104c19-2061-4fac-93a1-a3a3a57ef0e3",
       "name": "Menu Inicial"
     },
     {
@@ -83,10 +83,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2176,
-        -64
+        -1648,
+        224
       ],
-      "id": "a28d789a-9c13-45b8-9e1b-c266283783ae",
+      "id": "c85aef9c-7f0f-4344-bc32-3832b99dc684",
       "name": "Procesar Materia"
     },
     {
@@ -116,10 +116,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2000,
-        -64
+        -1472,
+        224
       ],
-      "id": "7b1c4c0d-b943-45d7-a459-f36f9df98e43",
+      "id": "b2a673ab-1b67-4a72-aaef-1ad9f76538b2",
       "name": "¿Materia Inválida?"
     },
     {
@@ -139,15 +139,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1776,
-        -48
+        -1248,
+        240
       ],
-      "id": "53249909-f5bd-4ebe-9e8d-4560ea4d197c",
+      "id": "072d4099-9760-46ed-9fd4-5e8eba4e11e6",
       "name": "Descargar Tutores",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -158,10 +158,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1584,
-        -48
+        -1056,
+        240
       ],
-      "id": "154c20ae-043a-44d2-8fb5-661fabf34522",
+      "id": "58d1cbfb-4e5b-47f5-8d16-27aa931360e3",
       "name": "Filtrar Tutores"
     },
     {
@@ -181,16 +181,16 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1376,
-        -48
+        -848,
+        240
       ],
-      "id": "68a74535-1c9d-4342-918c-255f593f1d37",
+      "id": "2c74c2ca-f76a-414c-a736-b23c6e5599ee",
       "name": "Descargar Disponibilidades",
       "alwaysOutputData": false,
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -201,10 +201,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1184,
-        -48
+        -656,
+        240
       ],
-      "id": "6c85996c-b2d2-47d9-ad26-678cd3d40953",
+      "id": "36509443-6a45-4704-8ba6-fe781e4ee3bb",
       "name": "Cruzar Disponibilidad"
     },
     {
@@ -214,10 +214,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -928,
-        -96
+        -400,
+        192
       ],
-      "id": "f6e62c90-5105-4de7-b219-238d4d34a866",
+      "id": "55cbc7fc-66f3-4fce-8bdf-14b2502ddbbc",
       "name": "Motor de Asignación"
     },
     {
@@ -247,10 +247,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -752,
-        -240
+        -224,
+        48
       ],
-      "id": "892de16c-942b-4c84-a0d0-6ca2a8faa1e7",
+      "id": "24bc6e70-32a9-469c-a2ca-e0ef48a857db",
       "name": "¿Hay Opciones?"
     },
     {
@@ -260,10 +260,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -528,
-        -288
+        0,
+        0
       ],
-      "id": "9835c45e-a903-43ce-a5cd-716edd837e02",
+      "id": "70835b5f-fa6d-4fee-a198-6ebe84fef809",
       "name": "Handler Sin Tutores"
     },
     {
@@ -273,10 +273,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -528,
-        -112
+        0,
+        176
       ],
-      "id": "bf86525a-a55a-417c-924f-31a1d8b56685",
+      "id": "213a29ff-6ea3-40eb-ad65-7ad4a4d83ca2",
       "name": "Construir Menú Opciones"
     },
     {
@@ -407,15 +407,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -672,
-        192
+        -144,
+        464
       ],
-      "id": "3047b6c9-3695-485f-9fc0-000f06e4218d",
+      "id": "8c5a46b1-6745-4222-b32f-0158c646d934",
       "name": "Almacenar Pre-Reservas",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -436,15 +436,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        128,
-        96
+        640,
+        368
       ],
-      "id": "f756d665-cd89-4ead-8637-66cecf921f9b",
+      "id": "009d2aa9-ec31-4f8b-953c-51faa9aecc38",
       "name": "Cargar Opciones Ofrecidas",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -455,10 +455,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        352,
-        96
+        864,
+        368
       ],
-      "id": "7eb64a0c-b715-4a91-acf8-e6a790eb944d",
+      "id": "92adbb96-95d3-4f90-a9e2-227ed409342f",
       "name": "Validar Selección"
     },
     {
@@ -486,19 +486,19 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        576,
-        96
+        1088,
+        368
       ],
-      "id": "fbbe2cf0-e016-4c38-a471-93215287569c",
+      "id": "7a7c72d5-4f2d-41a5-9bca-08434bfb7a77",
       "name": "¿Selección Inválida?"
     },
     {
       "parameters": {
         "calendar": {
           "__rl": true,
-          "value": "alexc6997@gmail.com",
+          "value": "nataliarolonleal@gmail.com",
           "mode": "list",
-          "cachedResultName": "alexc6997@gmail.com"
+          "cachedResultName": "nataliarolonleal@gmail.com"
         },
         "start": "={{ $json.fecha + 'T' + $json.hora_inicio.padStart(5,'0') + ':00-05:00' }}",
         "end": "={{ $json.fecha + 'T' + $json.hora_fin.padStart(5,'0') + ':00-05:00' }}",
@@ -507,15 +507,15 @@
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1.3,
       "position": [
-        800,
-        112
+        1312,
+        384
       ],
-      "id": "d3244a4c-1b3e-4d5d-8d5e-b226cf6d6c3d",
+      "id": "4948ad09-9bf2-4585-9c11-a5d5fe923aaf",
       "name": "Agendar Google Calendar",
       "alwaysOutputData": true,
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "Z9JehC3ptmYOv32N",
+          "id": "1jW9IIfIIfa7MKJR",
           "name": "Google Calendar account"
         }
       }
@@ -644,15 +644,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1008,
-        112
+        1520,
+        384
       ],
-      "id": "09003581-9471-49c5-9e46-3e9ec424edcb",
+      "id": "fc1b597e-df44-4723-9ec2-5e8a29dd10ea",
       "name": "Cerrar Disponibilidad",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -799,15 +799,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1216,
-        112
+        1728,
+        384
       ],
-      "id": "8f08f737-f87e-4541-b7c0-32adc695826c",
+      "id": "a06e4a12-726b-40b4-b6db-59a31b96db7e",
       "name": "Confirmar Asesoría",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -818,10 +818,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1408,
-        112
+        1920,
+        384
       ],
-      "id": "dcbc4a4e-ba03-42c2-a442-14498ae5caa0",
+      "id": "faa52da9-59c7-42e5-bc71-832637389d5e",
       "name": "Mensaje de Éxito"
     },
     {
@@ -829,10 +829,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -304,
-        96
+        224,
+        368
       ],
-      "id": "4ae13993-f2b8-47ac-af4f-f4c5e7df4249",
+      "id": "5133dfd9-a3d0-4a52-a6b8-1671a9d6984e",
       "name": "Merge Salidas"
     },
     {
@@ -878,15 +878,15 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1808,
-        32
+        2320,
+        304
       ],
-      "id": "2b64d956-fed1-4bec-9afb-69d800ee7d40",
+      "id": "1bf35598-63f7-4881-a525-dfff84dd714e",
       "name": "Guardar Estado DB",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "QjRFsBqRYDWP5T7B",
-          "name": "Google Sheets account 2"
+          "id": "dlZm8JgcwMf1mXt5",
+          "name": "Google Sheets account"
         }
       }
     },
@@ -897,10 +897,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3232,
-        48
+        -2704,
+        320
       ],
-      "id": "859ac270-1b32-4b8a-9b46-4f24dc540c50",
+      "id": "253f3404-a9fe-4596-bbbb-bb44bb206a32",
       "name": "Extraer Datos Discord"
     },
     {
@@ -909,17 +909,17 @@
         "operation": "sendAndWait",
         "guildId": {
           "__rl": true,
-          "value": "1527085786195951738",
+          "value": "1522644440114794537",
           "mode": "list",
-          "cachedResultName": "Servidor n8n",
-          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
+          "cachedResultName": "Servidor de Natalia Rolón Leal",
+          "cachedResultUrl": "https://discord.com/channels/1522644440114794537"
         },
         "channelId": {
           "__rl": true,
-          "value": "1527085834111680624",
+          "value": "1522644441087742004",
           "mode": "list",
-          "cachedResultName": "n8n",
-          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
+          "cachedResultName": "general",
+          "cachedResultUrl": "https://discord.com/channels/1522644440114794537/1522644441087742004"
         },
         "message": "={{ $json.respuesta }}",
         "responseType": "freeText",
@@ -928,16 +928,16 @@
       "type": "n8n-nodes-base.discord",
       "typeVersion": 2,
       "position": [
-        -2368,
-        -224
+        -1840,
+        64
       ],
-      "id": "85b7787b-8d91-4c92-93a4-d22d621b4c8e",
+      "id": "e971c9f9-022d-4065-83ad-87f9c19866ce",
       "name": "Send message and wait for response",
       "webhookId": "218e66dd-7cae-4773-870f-5202d1928a31",
       "credentials": {
         "discordBotApi": {
-          "id": "eJ6F1pe39cGzo6JQ",
-          "name": "Discord Bot account 2"
+          "id": "WJMYs9447W2qdM0K",
+          "name": "Discord Bot account"
         }
       }
     },
@@ -946,10 +946,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -3440,
-        48
+        -2912,
+        320
       ],
-      "id": "9bcb6aa9-0904-4763-a04a-c1962bd06699",
+      "id": "85a55e98-b9aa-4239-924d-7eb4b1de72e5",
       "name": "When clicking ‘Execute workflow’"
     },
     {
@@ -958,17 +958,17 @@
         "operation": "sendAndWait",
         "guildId": {
           "__rl": true,
-          "value": "1527085786195951738",
+          "value": "1522644440114794537",
           "mode": "list",
-          "cachedResultName": "Servidor n8n",
-          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
+          "cachedResultName": "Servidor de Natalia Rolón Leal",
+          "cachedResultUrl": "https://discord.com/channels/1522644440114794537"
         },
         "channelId": {
           "__rl": true,
-          "value": "1527085834111680624",
+          "value": "1522644441087742004",
           "mode": "list",
-          "cachedResultName": "n8n",
-          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
+          "cachedResultName": "general",
+          "cachedResultUrl": "https://discord.com/channels/1522644440114794537/1522644441087742004"
         },
         "message": "={{ $json.respuesta }}",
         "responseType": "freeText",
@@ -977,16 +977,16 @@
       "type": "n8n-nodes-base.discord",
       "typeVersion": 2,
       "position": [
-        -96,
-        96
+        432,
+        368
       ],
-      "id": "134554c9-ea8f-4b2b-a8a6-6e86b67aae55",
+      "id": "70df190c-cb12-41e0-a3ce-1b2d0fcc1447",
       "name": "Send message and wait for response1",
       "webhookId": "218e66dd-7cae-4773-870f-5202d1928a31",
       "credentials": {
         "discordBotApi": {
-          "id": "eJ6F1pe39cGzo6JQ",
-          "name": "Discord Bot account 2"
+          "id": "WJMYs9447W2qdM0K",
+          "name": "Discord Bot account"
         }
       }
     },
@@ -995,17 +995,17 @@
         "resource": "message",
         "guildId": {
           "__rl": true,
-          "value": "1527085786195951738",
+          "value": "1522644440114794537",
           "mode": "list",
-          "cachedResultName": "Servidor n8n",
-          "cachedResultUrl": "https://discord.com/channels/1527085786195951738"
+          "cachedResultName": "Servidor de Natalia Rolón Leal",
+          "cachedResultUrl": "https://discord.com/channels/1522644440114794537"
         },
         "channelId": {
           "__rl": true,
-          "value": "1527085834111680624",
+          "value": "1522644441087742004",
           "mode": "list",
-          "cachedResultName": "n8n",
-          "cachedResultUrl": "https://discord.com/channels/1527085786195951738/1527085834111680624"
+          "cachedResultName": "general",
+          "cachedResultUrl": "https://discord.com/channels/1522644440114794537/1522644441087742004"
         },
         "content": "={{ $json.respuesta }}",
         "options": {}
@@ -1013,16 +1013,16 @@
       "type": "n8n-nodes-base.discord",
       "typeVersion": 2,
       "position": [
-        1616,
-        32
+        2128,
+        304
       ],
-      "id": "d8c48e76-a2d3-4663-815b-31b6c137e527",
+      "id": "e8b889b1-ed64-4cbb-a1f1-710e3770fc1f",
       "name": "Send a message",
       "webhookId": "b615d0e9-99a7-4308-85c9-a1c865581d39",
       "credentials": {
         "discordBotApi": {
-          "id": "eJ6F1pe39cGzo6JQ",
-          "name": "Discord Bot account 2"
+          "id": "WJMYs9447W2qdM0K",
+          "name": "Discord Bot account"
         }
       }
     }
@@ -1338,13 +1338,15 @@
   },
   "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "7b4afdcd-da03-434b-bf21-c04ba9fc37a7",
+  "versionId": "d0da6017-ee35-4109-865d-3744833f1ebc",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "eccbb631d146352b69c2dcf3a0e899ec6bc26916e8a8bca0dd1f168d982a3dea"
+    "instanceId": "489454830b805717743ac4c8538048d101d7e28dd0d41eae12050f20151ec3b0"
   },
-  "id": "iNFMAxADkxPKBS2O",
+  "id": "Jh88xPOqbhWgkrx9",
   "tags": []
 }
